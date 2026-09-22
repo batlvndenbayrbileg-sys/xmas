@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import { LegalPage, Section } from "@/components/Legal";
 
 export const metadata: Metadata = {
-  title: "Нууцлалын бодлого — NARAN",
-  description: "NARAN хэрхэн таны хувийн мэдээллийг цуглуулж, ашиглаж, хамгаалдаг тухай.",
+  title: "Нууцлалын бодлого — X-MAS",
+  description: "X-MAS хэрхэн таны хувийн мэдээллийг цуглуулж, ашиглаж, хамгаалдаг тухай.",
 };
 
 export default function PrivacyPage() {
   return (
     <LegalPage title="Нууцлалын бодлого" updated="2026-08-29">
       <p>
-        <strong>NARAN</strong> нь таны хувийн мэдээллийг хариуцлагатай хамгаалахыг эрхэмлэдэг. Энэ
+        <strong>X-MAS</strong> нь таны хувийн мэдээллийг хариуцлагатай хамгаалахыг эрхэмлэдэг. Энэ
         бодлого нь бид ямар мэдээлэл цуглуулж, яагаад, хэрхэн ашигладгийг тайлбарлана.
       </p>
 

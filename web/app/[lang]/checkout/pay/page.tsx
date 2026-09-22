@@ -201,7 +201,7 @@ function Shell({ children, wide }: { children: React.ReactNode; wide?: boolean }
         transition={{ duration: 0.5, ease: EASE }}
         className={`bg-white rounded-3xl p-8 sm:p-10 w-full border border-line shadow-lift text-center ${wide ? "max-w-[520px]" : "max-w-[460px]"}`}
       >
-        <span className="font-display text-[22px] tracking-[.04em]">NARAN</span>
+        <span className="font-display text-[22px] tracking-[.04em]">X-MAS</span>
         {children}
       </motion.div>
     </div>

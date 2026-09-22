@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { LegalPage, Section } from "@/components/Legal";
 
 export const metadata: Metadata = {
-  title: "Буцаалтын бодлого — NARAN",
-  description: "NARAN дэлгүүрийн бараа буцаах, нөхөн олгох нөхцөл.",
+  title: "Буцаалтын бодлого — X-MAS",
+  description: "X-MAS дэлгүүрийн бараа буцаах, нөхөн олгох нөхцөл.",
 };
 
 export default function RefundPolicyPage() {

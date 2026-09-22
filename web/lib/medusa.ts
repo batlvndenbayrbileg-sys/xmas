@@ -4,7 +4,7 @@ import { ENRICH, DEFAULT_ENRICH } from "./enrich";
 // Medusa category handle → storefront Category key. Taxonomy lives in Medusa
 // (product categories), so this scales to a 10k+ catalog with no per-product map.
 const HANDLE_TO_CATEGORY: Record<string, Category> = {
-  fragrance: "Fragrance", skincare: "Skincare", makeup: "Makeup", body: "Body", gift: "Gift",
+  nike: "Nike", adidas: "Adidas", "new-balance": "New Balance", puma: "Puma", converse: "Converse",
 };
 
 const URL = process.env.NEXT_PUBLIC_MEDUSA_URL || "http://localhost:9000";
@@ -13,6 +13,9 @@ const REGION = process.env.NEXT_PUBLIC_MEDUSA_REGION || "reg_01M0T6Q2HE0A9R8MHXT
 // When set, free-text search routes through the MeiliSearch plugin endpoint
 // (typo-tolerant, fast at 10k+). Falls back to Medusa's built-in `q` on any error.
 const MEILI_ENABLED = (process.env.NEXT_PUBLIC_MEILISEARCH ?? "") === "1";
+// Search index UID — must match the backend's MEILI_INDEX so each store queries
+// its own index (X-MAS vs beauty). Falls back to Medusa's built-in search on miss.
+const MEILI_INDEX = process.env.NEXT_PUBLIC_MEILI_INDEX || "products";
 
 const FIELDS = "id,title,handle,description,thumbnail,*categories,*images,*options,*options.values,*variants,*variants.calculated_price,*variants.manage_inventory,*variants.inventory_items.inventory.location_levels.available_quantity";
 const H = { "content-type": "application/json", "x-publishable-api-key": PK };
@@ -148,7 +151,7 @@ function map(m: any): Product {
     rating: e.rating,
     reviews: e.reviews,
     badge: e.badge ?? null,
-    colors: [e.accent],
+    colors: e.colors?.length ? e.colors : [e.accent],
     sizes,
     fabric: e.fabric,
     shortDesc: description.slice(0, 90),
@@ -181,7 +184,7 @@ async function searchProducts(q: string): Promise<Product[]> {
   if (MEILI_ENABLED) {
     try {
       const p = new URLSearchParams({ query: q, region_id: REGION, fields: FIELDS, limit: "100" });
-      const res = await mfetch(`meilisearch/products?${p.toString()}`);
+      const res = await mfetch(`meilisearch/${MEILI_INDEX}?${p.toString()}`);
       return (res.products || []).map(map);
     } catch { /* fall through to built-in search */ }
   }

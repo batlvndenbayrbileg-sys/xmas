@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  /* Elegant high-contrast serif display (Playfair Display) with full Cyrillic;
-     Rubik carries the clean sans body (also Cyrillic). */
-  --font-display: var(--font-playfair), var(--font-rubik), Georgia, "Times New Roman", serif;
-  --font-serif: var(--font-playfair), Georgia, serif;
+  /* Condensed athletic display (Oswald) with full Cyrillic; Rubik carries the
+     clean sans body (also Cyrillic). Street / sport typographic system. */
+  --font-display: var(--font-oswald), var(--font-rubik), "Arial Narrow", system-ui, sans-serif;
+  --font-serif: var(--font-oswald), system-ui, sans-serif;
   --font-body: var(--font-rubik), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
@@ -21,17 +21,17 @@ html, body {
 }
 ::selection { background: #0E0F10; color: #fff; }
 
-/* The elegant serif reads best with a whisper of POSITIVE tracking in uppercase,
-   not the tight negative default. One rule relaxes every display heading that
-   uses Tailwind's tracking-tight (combined-class specificity beats the utility). */
-.font-display.tracking-tight { letter-spacing: .012em; }
+/* Condensed athletic display reads best TIGHT in uppercase. One rule keeps every
+   display heading that uses Tailwind's tracking-tight crisp (combined-class
+   specificity beats the utility). */
+.font-display.tracking-tight { letter-spacing: -0.005em; }
 
 /* A11y: visible keyboard focus. Element+pseudo specificity (0,1,1) beats the
    `outline-none` utility (0,1,0), so even inputs get a ring on keyboard focus.
    Mouse clicks don't trigger :focus-visible, so this stays unobtrusive. */
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
 textarea:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
-  outline: 2px solid #FF6A1A;
+  outline: 2px solid #E4022A;
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -148,7 +148,7 @@ html.lenis, html.lenis body { height: auto; }
            active:translate-y-0 active:scale-[.97];
   }
   /* Warm, brand-tinted lift on the primary CTA (not a flat grey shadow). */
-  .btn-primary { @apply bg-accent text-ink hover:bg-accent-deep hover:-translate-y-0.5 hover:shadow-[0_14px_34px_-10px_rgba(232,85,10,.5)]; }
+  .btn-primary { @apply bg-accent text-white hover:bg-accent-deep hover:-translate-y-0.5 hover:shadow-[0_14px_34px_-10px_rgba(228,2,42,.5)]; }
   .btn-dark    { @apply bg-ink text-white hover:-translate-y-0.5 hover:shadow-lift; }
   .btn-ghost   { @apply bg-surface-2 text-ink hover:bg-white hover:shadow-soft hover:-translate-y-0.5; }
   .btn-light   { @apply bg-white text-ink hover:bg-mist hover:-translate-y-0.5 hover:shadow-soft; }
@@ -204,14 +204,14 @@ html.lenis, html.lenis body { height: auto; }
   /* Display scale — Playfair Display (Latin + Cyrillic), an elegant high-contrast
      serif. Uppercase serif reads best a touch lighter (700–800) with slight
      POSITIVE tracking and calm leading. */
-  .h-mega    { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: clamp(64px, 12vw, 200px); line-height: .95; letter-spacing: .008em; }
-  .h-display { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: clamp(46px, 7.6vw, 124px); line-height: .98; letter-spacing: .01em; }
-  .h-hero    { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(38px, 6vw, 96px); line-height: 1; letter-spacing: .012em; }
+  .h-mega    { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(64px, 12vw, 200px); line-height: .9; letter-spacing: -0.01em; }
+  .h-display { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(46px, 7.6vw, 124px); line-height: .94; letter-spacing: -0.008em; }
+  .h-hero    { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(38px, 6vw, 96px); line-height: .96; letter-spacing: -0.006em; }
   /* Renamed from .h-1/.h-2/.h-3 — those collided with Tailwind height utilities
      (h-2 = 0.5rem) which clamped heading height and made text overlap siblings. */
-  .hd-1      { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(32px, 4.6vw, 62px); line-height: 1.04; letter-spacing: .014em; text-wrap: balance; }
-  .hd-2      { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(26px, 3.6vw, 50px); line-height: 1.06; letter-spacing: .018em; text-wrap: balance; }
-  .hd-3      { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: 21px; line-height: 1.2; letter-spacing: .02em; text-wrap: balance; }
+  .hd-1      { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(32px, 4.6vw, 62px); line-height: 1; letter-spacing: -0.004em; text-wrap: balance; }
+  .hd-2      { font-family: var(--font-display); font-weight: 600; text-transform: uppercase; font-size: clamp(26px, 3.6vw, 50px); line-height: 1.02; letter-spacing: -0.002em; text-wrap: balance; }
+  .hd-3      { font-family: var(--font-display); font-weight: 600; text-transform: uppercase; font-size: 21px; line-height: 1.15; letter-spacing: .004em; text-wrap: balance; }
 
   /* Ghost / outline display text */
   .ghost {

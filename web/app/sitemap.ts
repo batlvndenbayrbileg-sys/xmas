@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { medusa } from "@/lib/medusa";
 import { LOCALES } from "@/lib/i18n";
 
-const BASE = (process.env.NEXT_PUBLIC_SITE_URL || "https://naran.mn").replace(/\/$/, "");
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL || "https://xmas.mn").replace(/\/$/, "");
 const CATEGORIES = ["Fragrance", "Skincare", "Makeup", "Body", "Gift"];
 
 export const revalidate = 3600; // rebuild the sitemap hourly

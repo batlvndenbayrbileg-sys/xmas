@@ -56,7 +56,9 @@ if (meiliUp) {
     options: {
       config: { host: MEILI_HOST, apiKey: MEILI_KEY ?? '' },
       settings: {
-        products: {
+        // Index UID is env-driven so each store (X-MAS vs beauty) owns its own
+        // MeiliSearch index even when they share one Meili instance.
+        [process.env.MEILI_INDEX || 'products']: {
           type: 'products',
           enabled: true,
           fields: ['id', 'title', 'description', 'handle', 'thumbnail', 'categories.id', 'categories.name', 'categories.handle'],

@@ -19,12 +19,12 @@ import { tFor, type Lang } from "@/lib/i18n";
 export const revalidate = 300;
 
 const CATS = [
-  { key: "cat.all",        href: "/shop",                     img: HERO_IMG },
-  { key: "cat.Fragrance",  href: "/shop?category=Fragrance",  img: PRODUCT_IMG.p1 },
-  { key: "cat.Skincare",   href: "/shop?category=Skincare",   img: PRODUCT_IMG.p4 },
-  { key: "cat.Makeup",     href: "/shop?category=Makeup",     img: PRODUCT_IMG.p6 },
-  { key: "cat.Body",       href: "/shop?category=Body",       img: PRODUCT_IMG.p3 },
-  { key: "cat.Gift",       href: "/shop?category=Gift",       img: PRODUCT_IMG.p5 },
+  { key: "cat.all",          href: "/shop",                         img: HERO_IMG },
+  { key: "cat.Nike",         href: "/shop?category=Nike",           img: PRODUCT_IMG.p1 },
+  { key: "cat.Adidas",       href: "/shop?category=Adidas",         img: PRODUCT_IMG.p4 },
+  { key: "cat.New Balance",  href: "/shop?category=New%20Balance",  img: PRODUCT_IMG.p3 },
+  { key: "cat.Puma",         href: "/shop?category=Puma",           img: PRODUCT_IMG.p2 },
+  { key: "cat.Converse",     href: "/shop?category=Converse",       img: PRODUCT_IMG.p5 },
 ];
 
 export default async function HomePage({ params }: { params: { lang: Lang } }) {
@@ -45,8 +45,8 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
 
   const defaultSlides: Slide[] = [
     { kicker: t("home.s1Kicker"), top: t("home.s1Top"), accent: t("home.s1Accent"), desc: t("home.s1Desc"), img: FILM_IMG, href: "/shop" },
-    { kicker: t("home.s2Kicker"), top: t("home.s2Top"), accent: t("home.s2Accent"), desc: t("home.s2Desc"), img: PRODUCT_IMG.p4, href: "/shop?category=Skincare" },
-    { kicker: t("home.s3Kicker"), top: t("home.s3Top"), accent: t("home.s3Accent"), desc: t("home.s3Desc"), img: PRODUCT_IMG.p6, href: "/shop?category=Makeup" },
+    { kicker: t("home.s2Kicker"), top: t("home.s2Top"), accent: t("home.s2Accent"), desc: t("home.s2Desc"), img: PRODUCT_IMG.p4, href: "/shop?category=Adidas" },
+    { kicker: t("home.s3Kicker"), top: t("home.s3Top"), accent: t("home.s3Accent"), desc: t("home.s3Desc"), img: PRODUCT_IMG.p6, href: "/shop?category=New%20Balance" },
   ];
   // Admin CMS overrides the defaults when hero slides have been configured.
   const slides: Slide[] = cms?.hero?.length
@@ -76,11 +76,11 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
       };
 
   // Site-wide structured data (Organization + WebSite with a Sitelinks search box).
-  const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://naran.mn").replace(/\/$/, "");
+  const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://xmas.mn").replace(/\/$/, "");
   const structuredData = [
-    { "@context": "https://schema.org", "@type": "Organization", name: "NARAN", url: SITE, logo: `${SITE}/icon.svg` },
+    { "@context": "https://schema.org", "@type": "Organization", name: "X-MAS", url: SITE, logo: `${SITE}/icon.svg` },
     {
-      "@context": "https://schema.org", "@type": "WebSite", name: "NARAN", url: SITE,
+      "@context": "https://schema.org", "@type": "WebSite", name: "X-MAS", url: SITE,
       potentialAction: { "@type": "SearchAction", target: `${SITE}/${L}/shop?q={search_term_string}`, "query-input": "required name=search_term_string" },
     },
   ];
@@ -126,7 +126,7 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
 
       {/* ===================== MARQUEE ===================== */}
       <section className="py-11 sm:py-16 mt-10 sm:mt-14 bg-mist border-y border-line">
-        <Marquee items={[t("home.mqA"), "NARAN", t("home.mqB"), "NARAN", t("home.mqC"), "NARAN", t("home.mqD"), "NARAN"]} />
+        <Marquee items={[t("home.mqA"), "X-MAS", t("home.mqB"), "X-MAS", t("home.mqC"), "X-MAS", t("home.mqD"), "X-MAS"]} />
       </section>
 
       {/* ===================== PROMO BANNER ===================== */}
@@ -136,9 +136,9 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
             <div className="relative overflow-hidden rounded-[2rem] bg-accent text-white grid grid-cols-1 lg:grid-cols-2 items-center min-h-[280px]">
               <div className="absolute -right-20 -bottom-20 w-72 h-72 rounded-full bg-white/15 blur-2xl"/>
               <div className="relative z-10 p-8 sm:p-12">
-                <span className="eyebrow text-ink/75">{promo.kicker}</span>
-                <h2 className="hd-2 mt-3 text-ink">{promo.title}</h2>
-                <p className="text-ink/80 mt-3 max-w-[360px]">{promo.desc}</p>
+                <span className="eyebrow text-white/80">{promo.kicker}</span>
+                <h2 className="hd-2 mt-3 text-white">{promo.title}</h2>
+                <p className="text-white/85 mt-3 max-w-[360px]">{promo.desc}</p>
                 <Link href={promo.href} className="btn btn-light mt-6">
                   {promo.cta}
                   <span className="arrow-cap"><ArrowUpRight width={14} height={14}/></span>

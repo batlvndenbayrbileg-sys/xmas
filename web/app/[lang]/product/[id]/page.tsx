@@ -28,17 +28,17 @@ export async function generateStaticParams() {
   }
 }
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://naran.mn").replace(/\/$/, "");
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://xmas.mn").replace(/\/$/, "");
 
 // Per-product SEO: title, description, canonical, and Open Graph image.
 export async function generateMetadata({ params }: { params: { lang: string; id: string } }): Promise<Metadata> {
   try {
     const { data: p } = await api.products.get(params.id);
     const url = `${SITE_URL}/${params.lang}/product/${p.slug}`;
-    const desc = (p.shortDesc || p.description || `${p.name} — NARAN`).slice(0, 160);
+    const desc = (p.shortDesc || p.description || `${p.name} — X-MAS`).slice(0, 160);
     const img = p.image ?? productImg(p.id);
     return {
-      title: `${p.name} — NARAN`,
+      title: `${p.name} — X-MAS`,
       description: desc,
       alternates: {
         canonical: url,
@@ -47,10 +47,10 @@ export async function generateMetadata({ params }: { params: { lang: string; id:
           en: `${SITE_URL}/en/product/${p.slug}`,
         },
       },
-      openGraph: { title: `${p.name} — NARAN`, description: desc, url, type: "website", images: [{ url: img }] },
+      openGraph: { title: `${p.name} — X-MAS`, description: desc, url, type: "website", images: [{ url: img }] },
     };
   } catch {
-    return { title: "Бараа — NARAN" };
+    return { title: "Бараа — X-MAS" };
   }
 }
 

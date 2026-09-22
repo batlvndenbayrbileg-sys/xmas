@@ -137,7 +137,7 @@ export default function CheckoutPage() {
       // 1. Build the Medusa cart (not completed yet)
       const { cartId, total: cartTotal } = await medusa.prepareCart({ email, items: lineItems, shippingOptionId: shipOptionId || undefined, address, token: token ?? undefined, promoCode: promoCode ?? undefined });
       // 2. Create a Botxon invoice (QPay / bank apps) — money to the merchant's QPay.
-      const invoice = await botxon.createInvoice({ cartId, amount: cartTotal, email, shippingMethod: coarse, description: "NARAN" });
+      const invoice = await botxon.createInvoice({ cartId, amount: cartTotal, email, shippingMethod: coarse, description: "X-MAS" });
       // 3. Stash QR + deeplinks for the pay page, then show the QR and poll status.
       try { sessionStorage.setItem(`botxon_inv_${invoice.invoiceId}`, JSON.stringify({ ...invoice, amount: cartTotal })); } catch { /* private mode */ }
       router.push(`/${lang}/checkout/pay?inv=${encodeURIComponent(invoice.invoiceId)}`);

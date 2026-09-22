@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import { LegalPage, Section } from "@/components/Legal";
 
 export const metadata: Metadata = {
-  title: "Үйлчилгээний нөхцөл — NARAN",
-  description: "NARAN онлайн дэлгүүрийн үйлчилгээний нөхцөл.",
+  title: "Үйлчилгээний нөхцөл — X-MAS",
+  description: "X-MAS онлайн дэлгүүрийн үйлчилгээний нөхцөл.",
 };
 
 export default function TermsPage() {
   return (
     <LegalPage title="Үйлчилгээний нөхцөл" updated="2026-08-29">
       <p>
-        Энэхүү нөхцөл нь <strong>NARAN</strong> (цаашид «бид», «дэлгүүр») онлайн дэлгүүрийг
-        (<strong>[домэйн: naran.mn]</strong>) ашиглах, захиалга хийхэд үйлчилнэ. Захиалга өгснөөр
+        Энэхүү нөхцөл нь <strong>X-MAS</strong> (цаашид «бид», «дэлгүүр») онлайн дэлгүүрийг
+        (<strong>[домэйн: xmas.mn]</strong>) ашиглах, захиалга хийхэд үйлчилнэ. Захиалга өгснөөр
         та доорх нөхцөлийг хүлээн зөвшөөрсөнд тооцно.
       </p>
 

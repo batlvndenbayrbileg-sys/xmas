@@ -45,7 +45,7 @@ export function Footer() {
               <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-accent to-accent-deep text-white shadow-[0_8px_20px_-6px_rgba(255,106,26,.5)]">
                 <SunMark />
               </span>
-              <span className="font-display text-2xl font-black tracking-tight">NARAN</span>
+              <span className="font-display text-2xl font-black tracking-tight">X-MAS</span>
             </div>
             <p className="mt-5 text-sm leading-relaxed text-muted">{t("foot.tagline")}</p>
 
@@ -53,8 +53,8 @@ export function Footer() {
               <a href="tel:+97677000329" className="inline-flex items-center gap-2 text-sm text-ink/70 hover:text-accent transition-colors">
                 <PhoneIcon className="text-accent" /> {t("foot.phone")}
               </a>
-              <a href="mailto:support@naran.mn" className="inline-flex items-center gap-2 text-sm text-ink/70 hover:text-accent transition-colors">
-                <MailIcon className="text-accent" /> support@naran.mn
+              <a href="mailto:support@xmas.mn" className="inline-flex items-center gap-2 text-sm text-ink/70 hover:text-accent transition-colors">
+                <MailIcon className="text-accent" /> support@xmas.mn
               </a>
             </div>
 
@@ -66,7 +66,7 @@ export function Footer() {
 
           {/* Nav — only real destinations (placeholder About/Stores/Journal/FAQ removed). */}
           <nav className="grid w-full grid-cols-2 gap-8 text-center md:w-auto md:text-left">
-            <FootCol title={t("foot.shop")} links={[["/shop?category=Fragrance",t("cat.Fragrance")],["/shop?category=Skincare",t("cat.Skincare")],["/shop?category=Makeup",t("cat.Makeup")],["/shop?category=Gift",t("cat.Gift")]]}/>
+            <FootCol title={t("foot.shop")} links={[["/shop?category=Nike",t("cat.Nike")],["/shop?category=Adidas",t("cat.Adidas")],["/shop?category=New%20Balance",t("cat.New Balance")],["/shop?category=Converse",t("cat.Converse")]]}/>
             <FootCol title={t("foot.support")} links={[["/shop",t("bc.shop")],["/refund-policy",t("foot.refund")],["/terms",t("foot.terms")],["/privacy",t("foot.privacy")]]}/>
           </nav>
         </div>

@@ -6,7 +6,7 @@ const Sparkle = () => (
 
 /**
  * Infinite brand marquee. Phrases glide past separated by an accent sparkle;
- * "NARAN" tokens are picked out in accent so the band reads with rhythm rather
+ * "X-MAS" tokens are picked out in accent so the band reads with rhythm rather
  * than as a flat string. Pauses on hover. Purely decorative (aria-hidden).
  */
 export function Marquee({ items }: { items: string[] }) {
@@ -24,7 +24,7 @@ export function Marquee({ items }: { items: string[] }) {
           <span key={i} className="flex items-center gap-7 sm:gap-10">
             <span
               className={
-                s === "NARAN"
+                s === "X-MAS"
                   ? "font-display text-[19px] sm:text-[26px] tracking-tight text-accent-deep"
                   : "font-display text-[19px] sm:text-[26px] tracking-tight text-ink/65 transition-colors group-hover:text-ink/80"
               }

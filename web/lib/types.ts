@@ -1,7 +1,8 @@
-export type Category = "Fragrance" | "Skincare" | "Makeup" | "Body" | "Gift";
+// X-MAS — multi-brand sneaker store. `Category` is the sneaker brand (taxonomy
+// lives in Medusa); `Shape` is the silhouette used by the fallback SVG visual.
+export type Category = "Nike" | "Adidas" | "New Balance" | "Puma" | "Converse";
 export type Shape =
-  | "perfume" | "serum" | "cream" | "cleanser" | "lipstick"
-  | "foundation" | "mascara" | "lotion" | "showergel" | "giftset";
+  | "runner" | "lowtop" | "hightop" | "chunky" | "skate" | "slide";
 
 export type Product = {
   id: string;
@@ -18,7 +19,7 @@ export type Product = {
   badge?: "Sale" | "New" | null;
   colors: string[];
   sizes: string[];
-  fabric: string;
+  fabric: string; // sneaker: silhouette type (Lifestyle, Running, Skate…)
   shortDesc: string;
   description: string;
   bullets: string[];

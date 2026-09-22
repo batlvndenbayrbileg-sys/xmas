@@ -109,7 +109,7 @@ export function Nav() {
           between lg and xl so nothing ever collides at tighter widths. */}
       <nav className="hidden lg:grid grid-cols-[auto_1fr_auto] items-center gap-3 xl:gap-4 bg-white/65 backdrop-blur-xl rounded-pill pl-5 xl:pl-6 pr-2 py-2.5 border border-white/60 ring-1 ring-black/[.04] shadow-[0_10px_34px_-16px_rgba(10,10,11,.28)]">
         <div className="flex items-center gap-5 xl:gap-6 min-w-0">
-          {[["/shop","nav.shop",true],["/shop?category=Fragrance","cat.Fragrance",false],["/shop?category=Skincare","cat.Skincare",false],["/shop?category=Makeup","cat.Makeup",false]].map(([h,k,pri]) => (
+          {[["/shop","nav.shop",true],["/shop?category=Nike","cat.Nike",false],["/shop?category=Adidas","cat.Adidas",false],["/shop?category=New%20Balance","cat.New Balance",false]].map(([h,k,pri]) => (
             <Link key={k as string} href={h as string}
               aria-current={pathname === h ? "page" : undefined}
               className={`relative whitespace-nowrap text-[12px] uppercase tracking-[.12em] font-medium transition-colors after:absolute after:left-0 after:-bottom-1.5 after:h-[1.5px] after:bg-accent after:transition-all after:duration-300 after:ease-elegant hover:after:w-full ${pri ? "inline-flex" : "hidden xl:inline-flex"} ${pathname===h?"text-ink after:w-full":"text-muted hover:text-ink after:w-0"}`}>{t(k as string)}</Link>
@@ -118,7 +118,7 @@ export function Nav() {
 
         <Link href="/" className="group justify-self-center flex items-center gap-2 font-display text-[20px] xl:text-[22px] tracking-[.04em] leading-none whitespace-nowrap">
           <span className="w-2 h-2 rounded-full bg-accent transition-transform duration-300 ease-spring group-hover:scale-125"/>
-          NARAN
+          X-MAS
         </Link>
 
         <div className="flex items-center gap-2 xl:gap-2.5 justify-self-end">

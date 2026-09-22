@@ -68,7 +68,7 @@ function Success() {
         <Confetti />
 
         <Link href="/" className="relative z-10 flex items-center justify-center font-display text-[22px] tracking-[.04em]">
-          NARAN
+          X-MAS
         </Link>
 
         {/* success mark: ring pulse + spring circle + drawn check */}

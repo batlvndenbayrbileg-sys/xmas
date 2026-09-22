@@ -72,7 +72,7 @@ function Processing() {
         transition={{ duration: 0.5, ease: EASE }}
         className="bg-white rounded-3xl p-10 max-w-[460px] w-full border border-line shadow-lift text-center"
       >
-        <span className="font-display text-[22px] tracking-[.04em]">NARAN</span>
+        <span className="font-display text-[22px] tracking-[.04em]">X-MAS</span>
         <AnimatePresence mode="wait" initial={false}>
           {state === "review" ? (
             <motion.div key="review" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.35, ease: EASE }}>

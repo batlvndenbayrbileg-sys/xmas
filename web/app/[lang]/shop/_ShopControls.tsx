@@ -3,9 +3,10 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useT } from "@/components/LangProvider";
 
+// Values match Product.fabric (the sneaker silhouette type) — filtered in medusa.list.
 const TECH_TAGS = [
-  ["Stretch", "shop.tStretch"], ["Thermal", "shop.tThermal"],
-  ["Wicking", "shop.tWicking"], ["Water-repellent", "shop.tWater"],
+  ["Lifestyle", "shop.tLifestyle"], ["Running", "shop.tRunning"],
+  ["Skate", "shop.tSkate"], ["Canvas", "shop.tCanvas"],
 ] as const;
 
 // Build a new URL from the current params, setting (or clearing) the given keys.

@@ -3,7 +3,7 @@ import type { Category, Shape } from "./types";
 /**
  * Presentation metadata keyed by Medusa product handle.
  * Medusa is the source of truth for catalog, price, image and availability;
- * these fields enrich the storefront UX (category, accent, rating, badge, specs).
+ * these fields enrich the storefront UX (brand, accent, rating, badge, specs).
  */
 export type Enrich = {
   category: Category;
@@ -11,7 +11,8 @@ export type Enrich = {
   gender: "Men" | "Women" | "Unisex";
   season: "Winter" | "Summer" | "All-Season";
   accent: string;
-  fabric: string; // beauty: product type (Eau de Parfum, Serum, Lipstick…)
+  fabric: string; // sneaker: silhouette type (Lifestyle, Running, Skate…)
+  colors: string[];
   bullets: string[];
   specs: Record<string, string>;
   rating: number;
@@ -20,77 +21,81 @@ export type Enrich = {
   wasMultiplier?: number; // original price = price * multiplier
 };
 
-// Category accent tones (warm, beauty-appropriate)
-const A = {
-  Fragrance: "#B5643C",
-  Skincare: "#4F9A86",
-  Makeup: "#C03A57",
-  Body: "#B08159",
-  Gift: "#9A6BB0",
-} as const;
+const mk = (
+  category: Category, shape: Shape, accent: string, fabric: string,
+  colors: string[], rating: number, reviews: number,
+  bullets: string[], specs: Record<string, string>,
+  extra: Partial<Enrich> = {},
+): Enrich => ({
+  category, shape, gender: "Unisex", season: "All-Season",
+  accent, fabric, colors, rating, reviews, bullets, specs, badge: null, ...extra,
+});
 
 export const ENRICH: Record<string, Enrich> = {
-  // ── Үнэртэй ус (Fragrance) ──
-  "edp-bloom": { category: "Fragrance", shape: "perfume", gender: "Women", season: "All-Season", accent: A.Fragrance, fabric: "Eau de Parfum", rating: 5.0, reviews: 32, badge: "New",
-    bullets: ["Цэцгэн-мускийн зөөлөн аялгуу", "8+ цаг тогтвортой", "Сарнай, жасмин, мускийн нэгдэл"],
-    specs: { "Төрөл": "Eau de Parfum", "Хэмжээ": "50ml / 100ml", "Аялгуу": "Цэцгэн, мускус", "Тогтворжилт": "8+ цаг" } },
-  "edp-signature": { category: "Fragrance", shape: "perfume", gender: "Unisex", season: "All-Season", accent: A.Fragrance, fabric: "Eau de Parfum", rating: 5.0, reviews: 45, badge: "Sale", wasMultiplier: 1.29,
-    bullets: ["Модлог, дулаан амбер аяс", "Унисекс — эрэгтэй/эмэгтэй", "Онцлох брэндийн үнэр"],
-    specs: { "Төрөл": "Eau de Parfum", "Хэмжээ": "50ml / 100ml", "Аялгуу": "Модлог, амбер", "Тогтворжилт": "10+ цаг" } },
-  "rose-elixir": { category: "Fragrance", shape: "perfume", gender: "Women", season: "All-Season", accent: A.Fragrance, fabric: "Parfum", rating: 4.9, reviews: 21, badge: null,
-    bullets: ["Дамаск сарнайн ханд", "Тансаг эмэгтэй парфюм", "Урт хугацаанд тогтвортой"],
-    specs: { "Төрөл": "Parfum", "Хэмжээ": "50ml", "Аялгуу": "Сарнай, пион", "Тогтворжилт": "12+ цаг" } },
-  "citrus-cologne": { category: "Fragrance", shape: "perfume", gender: "Unisex", season: "Summer", accent: A.Fragrance, fabric: "Eau de Cologne", rating: 4.7, reviews: 54, badge: null,
-    bullets: ["Нимбэг, бергамотын сэргэг үнэр", "Өдөр тутмын хөнгөн хэрэглээ", "Зусланд тохиромжтой"],
-    specs: { "Төрөл": "Eau de Cologne", "Хэмжээ": "100ml", "Аялгуу": "Цитрус, ногоон", "Тогтворжилт": "4–6 цаг" } },
+  // ── Nike ──
+  "nike-air-max-90": mk("Nike", "runner", "#C8102E", "Lifestyle", ["#C8102E", "#111111", "#F2F2F2"], 4.9, 128,
+    ["Visible Air-Max хийн дэр", "Классик 90 силуэт", "Өдөр тутмын өмсгөлд тохиромжтой"],
+    { "Брэнд": "Nike", "Загвар": "Air Max 90", "Төрөл": "Lifestyle", "Дэрлэг": "Air Max", "Гадна": "Арьс / тор" },
+    { badge: "New" }),
+  "nike-air-force-1": mk("Nike", "lowtop", "#F2F2F2", "Lifestyle", ["#F2F2F2", "#111111"], 5.0, 214,
+    ["Бүтэн арьсан гадаргуу", "Air дэрлэгтэй тал улавч", "Хэзээ ч моодноос гардаггүй"],
+    { "Брэнд": "Nike", "Загвар": "Air Force 1 '07", "Төрөл": "Lifestyle", "Дэрлэг": "Nike Air", "Гадна": "Арьс" }),
+  "nike-dunk-low": mk("Nike", "lowtop", "#1E5AA8", "Skate", ["#1E5AA8", "#F2F2F2", "#C8102E"], 4.8, 96,
+    ["Хос өнгийн retro colorway", "Скейтээс гаралтай силуэт", "Namhan налуу хэлбэр"],
+    { "Брэнд": "Nike", "Загвар": "Dunk Low Retro", "Төрөл": "Skate / Lifestyle", "Гадна": "Арьс", "Тал улавч": "Резин" },
+    { badge: "Sale", wasMultiplier: 1.22 }),
 
-  // ── Арьс арчилгаа (Skincare) ──
-  "glow-serum": { category: "Skincare", shape: "serum", gender: "Unisex", season: "All-Season", accent: A.Skincare, fabric: "Serum", rating: 5.0, reviews: 24, badge: "New",
-    bullets: ["Гиалурон хүчил + ниацинамид", "Гэрэлтүүлэг өгч, чийгшүүлнэ", "Бүх төрлийн арьсанд"],
-    specs: { "Төрөл": "Гэрэлтүүлэгч ханд", "Хэмжээ": "30ml", "Найрлага": "Hyaluronic, Niacinamide", "Хэрэглээ": "Өглөө/орой" } },
-  "vitc-serum": { category: "Skincare", shape: "serum", gender: "Unisex", season: "All-Season", accent: A.Skincare, fabric: "Serum", rating: 4.8, reviews: 38, badge: null,
-    bullets: ["15% Витамин C", "Толбо арилгаж, тэгшитгэнэ", "Өглөө хэрэглэхэд тохиромжтой"],
-    specs: { "Төрөл": "Гэрэлтүүлэгч ханд", "Хэмжээ": "30ml", "Найрлага": "Vitamin C 15%", "Хэрэглээ": "Өглөө" } },
-  "hydra-cream": { category: "Skincare", shape: "cream", gender: "Unisex", season: "Winter", accent: A.Skincare, fabric: "Cream", rating: 4.9, reviews: 29, badge: null,
-    bullets: ["Керамид, ши тос", "Гүн чийгшүүлэгч", "Хуурай, мэдрэмтгий арьсанд"],
-    specs: { "Төрөл": "Чийгшүүлэгч тос", "Хэмжээ": "50ml", "Найрлага": "Ceramide, Shea", "Хэрэглээ": "Өглөө/орой" } },
-  "cleansing-foam": { category: "Skincare", shape: "cleanser", gender: "Unisex", season: "All-Season", accent: A.Skincare, fabric: "Cleanser", rating: 4.6, reviews: 61, badge: null,
-    bullets: ["Зөөлөн угаагч хөөс", "Арьсыг чангалахгүй", "Өдөр бүрийн цэвэрлэгээнд"],
-    specs: { "Төрөл": "Угаагч хөөс", "Хэмжээ": "150ml", "Найрлага": "Amino-acid", "Хэрэглээ": "Өглөө/орой" } },
+  // ── Adidas ──
+  "adidas-samba-og": mk("Adidas", "lowtop", "#111111", "Lifestyle", ["#111111", "#F2F2F2"], 5.0, 302,
+    ["T-toe арьсан хамар", "Gum резин тал улавч", "Terrace культурын классик"],
+    { "Брэнд": "Adidas", "Загвар": "Samba OG", "Төрөл": "Lifestyle", "Гадна": "Арьс / suede", "Тал улавч": "Gum резин" },
+    { badge: "New" }),
+  "adidas-ultraboost": mk("Adidas", "runner", "#2B2B2B", "Running", ["#2B2B2B", "#F2F2F2"], 4.8, 141,
+    ["BOOST эрчим хугаралгүй дэрлэг", "Primeknit сунадаг гадаргуу", "Урт зайн гүйлтэд"],
+    { "Брэнд": "Adidas", "Загвар": "Ultraboost Light", "Төрөл": "Running", "Дэрлэг": "BOOST", "Гадна": "Primeknit" }),
+  "adidas-gazelle": mk("Adidas", "lowtop", "#1D6FB8", "Lifestyle", ["#1D6FB8", "#F2F2F2", "#C8102E"], 4.7, 118,
+    ["Suede гадаргуу", "Нарийхан retro силуэт", "Тод colorway сонголт"],
+    { "Брэнд": "Adidas", "Загвар": "Gazelle Indoor", "Төрөл": "Lifestyle", "Гадна": "Suede", "Тал улавч": "Gum резин" }),
 
-  // ── Гоо сайхан (Makeup) ──
-  "lip-velvet-nude": { category: "Makeup", shape: "lipstick", gender: "Women", season: "All-Season", accent: A.Makeup, fabric: "Lipstick", rating: 5.0, reviews: 27, badge: "New",
-    bullets: ["Хилэн мэт матт өнгөлгөө", "Чийгшүүлэгч найрлага", "Бүдэг ягаан (nude) өнгө"],
-    specs: { "Төрөл": "Уруулын будаг", "Өнгө": "Nude", "Өнгөлгөө": "Матт", "Хэрэглээ": "Уруулд" } },
-  "lip-matte-ruby": { category: "Makeup", shape: "lipstick", gender: "Women", season: "All-Season", accent: A.Makeup, fabric: "Lipstick", rating: 4.9, reviews: 33, badge: null,
-    bullets: ["Тод улаан матт", "Урт хугацаанд тогтвортой", "Хатаахгүй найрлага"],
-    specs: { "Төрөл": "Уруулын будаг", "Өнгө": "Ruby", "Өнгөлгөө": "Матт", "Хэрэглээ": "Уруулд" } },
-  "silk-foundation": { category: "Makeup", shape: "foundation", gender: "Women", season: "All-Season", accent: A.Makeup, fabric: "Foundation", rating: 4.7, reviews: 48, badge: null,
-    bullets: ["Байгалийн өнгө", "Дунд зэргийн бүрхүүл", "Арьсыг гөлгөр харагдуулна"],
-    specs: { "Төрөл": "Шингэн суурь", "Өнгө": "Natural / Beige / Sand", "Бүрхүүл": "Дунд", "Хэрэглээ": "Нүүрэнд" } },
-  "volume-mascara": { category: "Makeup", shape: "mascara", gender: "Women", season: "All-Season", accent: A.Makeup, fabric: "Mascara", rating: 4.8, reviews: 40, badge: null,
-    bullets: ["Эзэлхүүн, урт өгнө", "Хунхрахгүй", "Ус тэсвэртэй"],
-    specs: { "Төрөл": "Сормуусны будаг", "Өнгө": "Black", "Онцлог": "Ус тэсвэртэй", "Хэрэглээ": "Сормуусанд" } },
+  // ── New Balance ──
+  "nb-550": mk("New Balance", "lowtop", "#16833E", "Basketball", ["#16833E", "#F2F2F2"], 4.9, 173,
+    ["80-аад оны сагсны retro", "Арьсан гадаргуу", "Цэвэрхэн өдөр тутмын пар"],
+    { "Брэнд": "New Balance", "Загвар": "550", "Төрөл": "Basketball / Lifestyle", "Гадна": "Арьс", "Тал улавч": "Резин" }),
+  "nb-9060": mk("New Balance", "chunky", "#8A8D91", "Lifestyle", ["#8A8D91", "#F2F2F2"], 4.8, 87,
+    ["99X-аас санаа авсан chunky силуэт", "ABZORB + SBS дэрлэг", "Давхарласан гадаргуу"],
+    { "Брэнд": "New Balance", "Загвар": "9060", "Төрөл": "Lifestyle", "Дэрлэг": "ABZORB / SBS", "Гадна": "Mesh / suede" },
+    { badge: "New" }),
+  "nb-1906r": mk("New Balance", "chunky", "#B0B4B8", "Running", ["#B0B4B8", "#111111"], 4.7, 64,
+    ["Y2K гүйлтийн силуэт", "N-ergy + ABZORB дэрлэг", "Металл мөнгөлөг өнгө"],
+    { "Брэнд": "New Balance", "Загвар": "1906R", "Төрөл": "Running / Lifestyle", "Дэрлэг": "N-ergy", "Гадна": "Mesh" }),
 
-  // ── Бие арчилгаа (Body) ──
-  "body-lotion-silk": { category: "Body", shape: "lotion", gender: "Unisex", season: "All-Season", accent: A.Body, fabric: "Body lotion", rating: 4.9, reviews: 18, badge: "Sale", wasMultiplier: 1.18,
-    bullets: ["Торго мэт зөөлөн мэдрэмж", "Хурдан шингэдэг", "Урт хугацаанд чийгшүүлнэ"],
-    specs: { "Төрөл": "Биеийн тос", "Хэмжээ": "250ml", "Найрлага": "Shea, Glycerin", "Хэрэглээ": "Биед" } },
-  "shower-gel-vanilla": { category: "Body", shape: "showergel", gender: "Unisex", season: "All-Season", accent: A.Body, fabric: "Shower gel", rating: 4.7, reviews: 22, badge: null,
-    bullets: ["Ваниль үнэртэй", "Зөөлөн шүршүүрийн гель", "Арьсыг цэвэрлэж тэжээнэ"],
-    specs: { "Төрөл": "Шүршүүрийн гель", "Хэмжээ": "300ml", "Үнэр": "Ваниль", "Хэрэглээ": "Биед" } },
+  // ── Puma ──
+  "puma-suede-classic": mk("Puma", "lowtop", "#C0392B", "Lifestyle", ["#C0392B", "#F2F2F2"], 4.6, 152,
+    ["Икон suede гадаргуу", "Formstrip хажуугийн зурвас", "Street культурын классик"],
+    { "Брэнд": "Puma", "Загвар": "Suede Classic XXI", "Төрөл": "Lifestyle", "Гадна": "Suede", "Тал улавч": "Резин" },
+    { badge: "Sale", wasMultiplier: 1.25 }),
+  "puma-rs-x": mk("Puma", "chunky", "#2D6CDF", "Lifestyle", ["#2D6CDF", "#F2F2F2", "#C8102E"], 4.5, 71,
+    ["RS дэрлэгтэй chunky силуэт", "Олон давхаргат гадаргуу", "Тод спорт colorway"],
+    { "Брэнд": "Puma", "Загвар": "RS-X", "Төрөл": "Lifestyle", "Дэрлэг": "RS", "Гадна": "Mesh / нийлэг" }),
+  "puma-palermo": mk("Puma", "lowtop", "#2E7D4F", "Lifestyle", ["#2E7D4F", "#F2F2F2"], 4.7, 58,
+    ["Terrace загварын retro", "Suede хамар", "Gum тал улавч"],
+    { "Брэнд": "Puma", "Загвар": "Palermo", "Төрөл": "Lifestyle", "Гадна": "Suede", "Тал улавч": "Gum резин" },
+    { badge: "New" }),
 
-  // ── Бэлгийн багц (Gift) ──
-  "premium-gift-set": { category: "Gift", shape: "giftset", gender: "Unisex", season: "All-Season", accent: A.Gift, fabric: "Gift set", rating: 4.9, reviews: 16, badge: "Sale", wasMultiplier: 1.30,
-    bullets: ["Парфюм, ханд, биеийн тос", "Тансаг бэлгийн боодол", "Бэлэн дурсгал"],
-    specs: { "Төрөл": "Бэлгийн багц", "Багтаамж": "3 бүтээгдэхүүн", "Боодол": "Бэлэн", "Тохиромж": "Бэлэг" } },
-  "skincare-starter-kit": { category: "Gift", shape: "giftset", gender: "Unisex", season: "All-Season", accent: A.Gift, fabric: "Gift set", rating: 4.8, reviews: 19, badge: null,
-    bullets: ["Угаагч + ханд + тос", "Арьс арчилгааны эхлэл", "Аяллын хэмжээтэй"],
-    specs: { "Төрөл": "Арьс арчилгааны багц", "Багтаамж": "3 бүтээгдэхүүн", "Онцлог": "Эхлэгчид", "Тохиромж": "Бэлэг" } },
+  // ── Converse ──
+  "converse-chuck-70-hi": mk("Converse", "hightop", "#111111", "Canvas", ["#111111", "#F2F2F2"], 4.9, 261,
+    ["Дээшилсэн Chuck 70 чанар", "Даавуун гадаргуу", "Vintage тал улавч"],
+    { "Брэнд": "Converse", "Загвар": "Chuck 70 High", "Төрөл": "Canvas / Lifestyle", "Гадна": "Даавуу", "Тал улавч": "Резин" }),
+  "converse-chuck-low": mk("Converse", "lowtop", "#C8102E", "Canvas", ["#C8102E", "#111111", "#F2F2F2"], 4.7, 189,
+    ["Классик All Star силуэт", "Хөнгөн даавуун гадаргуу", "Өдөр тутмын хэрэглээнд"],
+    { "Брэнд": "Converse", "Загвар": "Chuck Taylor All Star Low", "Төрөл": "Canvas / Lifestyle", "Гадна": "Даавуу", "Тал улавч": "Резин" }),
+  "converse-run-star": mk("Converse", "chunky", "#F2F2F2", "Platform", ["#F2F2F2", "#111111"], 4.6, 44,
+    ["Өндөрсгөсөн platform тал улавч", "Chuck-аас санаа авсан", "Bold street силуэт"],
+    { "Брэнд": "Converse", "Загвар": "Run Star Hike", "Төрөл": "Platform / Lifestyle", "Гадна": "Даавуу", "Тал улавч": "Platform резин" }),
 };
 
 export const DEFAULT_ENRICH: Enrich = {
-  category: "Skincare", shape: "cream", gender: "Unisex", season: "All-Season", accent: "#B5643C",
-  fabric: "Гоо сайхны бүтээгдэхүүн", rating: 4.7, reviews: 20, badge: null,
-  bullets: ["Чанартай найрлага", "Өдөр тутмын арчилгаанд"], specs: { "Хэрэглээ": "Заавраар" },
+  category: "Nike", shape: "lowtop", gender: "Unisex", season: "All-Season", accent: "#111111",
+  fabric: "Lifestyle", colors: ["#111111", "#F2F2F2"], rating: 4.7, reviews: 40, badge: null,
+  bullets: ["Оригинал баталгаат пүүз", "Өдөр тутмын өмсгөлд"], specs: { "Төрөл": "Lifestyle" },
 };

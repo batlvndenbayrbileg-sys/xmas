@@ -12,7 +12,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
     <div className="relative min-h-screen grid place-items-center p-6 mesh-light text-center overflow-hidden">
       <div className="pointer-events-none absolute left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] max-w-[90vw] rounded-full bg-accent/10 blur-3xl" />
       <div className="relative max-w-[440px] animate-rise">
-        <div className="font-display uppercase text-[20px] tracking-[.14em] text-accent">NARAN</div>
+        <div className="font-display uppercase text-[20px] tracking-[.14em] text-accent">X-MAS</div>
         <span className="mx-auto my-7 grid h-16 w-16 place-items-center rounded-full bg-surface-2 text-ink/50">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/>

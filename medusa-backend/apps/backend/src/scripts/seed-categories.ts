@@ -2,17 +2,17 @@ import { ExecArgs } from "@medusajs/framework/types";
 import { Modules } from "@medusajs/framework/utils";
 import { createProductCategoriesWorkflow } from "@medusajs/medusa/core-flows";
 
-// Canonical beauty taxonomy — lives in Medusa so it scales to a 10k+ catalog.
-// handle = storefront category key (lowercased); name = Mongolian display.
+// Canonical X-MAS brand taxonomy — lives in Medusa so it scales to a 10k+ catalog.
+// handle = storefront category key (lowercased slug); name = brand display.
 export const CATEGORIES = [
-  { handle: "fragrance", name: "Үнэртэй ус" },
-  { handle: "skincare", name: "Арьс арчилгаа" },
-  { handle: "makeup", name: "Гоо сайхан" },
-  { handle: "body", name: "Бие арчилгаа" },
-  { handle: "gift", name: "Бэлгийн багц" },
+  { handle: "nike", name: "Nike" },
+  { handle: "adidas", name: "Adidas" },
+  { handle: "new-balance", name: "New Balance" },
+  { handle: "puma", name: "Puma" },
+  { handle: "converse", name: "Converse" },
 ];
 
-// Mongolian name → handle, so seeders/importers can map their category column.
+// Brand name → handle, so seeders/importers can map their brand column.
 export const MN_TO_HANDLE: Record<string, string> = Object.fromEntries(
   CATEGORIES.map(c => [c.name, c.handle])
 );

@@ -7,11 +7,11 @@
     "api"
   ],
   "scripts": {
-    "predev": "kill-port 3000 4000 || true",
+    "predev": "kill-port 3002 4001 || true",
     "dev": "concurrently -n api,web -c blue,green \"npm:dev:api\" \"npm:dev:web\"",
     "dev:api": "npm --workspace api run dev",
     "dev:web": "npm --workspace web run dev",
-    "stop": "kill-port 3000 4000",
+    "stop": "kill-port 3002 4001",
     "build": "npm --workspace api run build && npm --workspace web run build",
     "start": "concurrently -n api,web -c blue,green \"npm --workspace api run start\" \"npm --workspace web run start\""
   },

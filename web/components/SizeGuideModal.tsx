@@ -4,14 +4,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useT } from "./LangProvider";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 
-// Generic athletic-fit chart (cm). Sizes are demo data, consistent across products.
-const ROWS: [string, number, number, number][] = [
-  ["XS", 86, 71, 89],
-  ["S", 91, 76, 94],
-  ["M", 97, 81, 99],
-  ["L", 102, 86, 104],
-  ["XL", 107, 91, 109],
-  ["XXL", 112, 96, 114],
+// Sneaker size conversion (EU · US · UK · foot length cm). Demo reference chart,
+// consistent across products. Values are approximate — brands vary slightly.
+const ROWS: [string, string, string, string][] = [
+  ["39", "6.5", "6", "24.5"],
+  ["40", "7", "6.5", "25"],
+  ["41", "8", "7", "26"],
+  ["42", "8.5", "8", "26.5"],
+  ["43", "9.5", "9", "27.5"],
+  ["44", "10", "9.5", "28"],
+  ["45", "11", "10.5", "29"],
 ];
 
 export function SizeGuideModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -64,19 +66,19 @@ export function SizeGuideModal({ open, onClose }: { open: boolean; onClose: () =
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-[12px] uppercase tracking-wide text-muted border-b border-line">
-                  <th className="py-2 font-semibold">{t("common.size")}</th>
-                  <th className="py-2 font-semibold num-tabular">{t("sg.chest")}</th>
-                  <th className="py-2 font-semibold num-tabular">{t("sg.waist")}</th>
-                  <th className="py-2 font-semibold num-tabular">{t("sg.hip")}</th>
+                  <th className="py-2 font-semibold num-tabular">{t("sg.eu")}</th>
+                  <th className="py-2 font-semibold num-tabular">{t("sg.us")}</th>
+                  <th className="py-2 font-semibold num-tabular">{t("sg.uk")}</th>
+                  <th className="py-2 font-semibold num-tabular">{t("sg.cm")}</th>
                 </tr>
               </thead>
               <tbody>
-                {ROWS.map(([size, chest, waist, hip]) => (
-                  <tr key={size} className="border-b border-line last:border-none">
-                    <td className="py-2.5 font-semibold">{size}</td>
-                    <td className="py-2.5 num-tabular">{chest}</td>
-                    <td className="py-2.5 num-tabular">{waist}</td>
-                    <td className="py-2.5 num-tabular">{hip}</td>
+                {ROWS.map(([eu, us, uk, cm]) => (
+                  <tr key={eu} className="border-b border-line last:border-none">
+                    <td className="py-2.5 font-semibold num-tabular">{eu}</td>
+                    <td className="py-2.5 num-tabular">{us}</td>
+                    <td className="py-2.5 num-tabular">{uk}</td>
+                    <td className="py-2.5 num-tabular">{cm}</td>
                   </tr>
                 ))}
               </tbody>

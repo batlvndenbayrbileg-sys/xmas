@@ -18,7 +18,7 @@ export default function NotFound() {
         className="relative"
         initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE }}
       >
-        <span className="font-display uppercase text-[20px] tracking-[.14em] text-accent">NARAN</span>
+        <span className="font-display uppercase text-[20px] tracking-[.14em] text-accent">X-MAS</span>
 
         <motion.p
           initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.75, delay: 0.06, ease: EASE }}
