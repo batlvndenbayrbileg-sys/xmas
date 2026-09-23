@@ -22,6 +22,9 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   const wished = mounted && has(product.id);
   const soldOut = product.stock === 0;
   const t = useT();
+  // Transparent PNG cutouts sit on a light tile with object-contain; promo-card
+  // JPGs fill a dark tile with object-cover.
+  const isCutout = (product.image ?? "").endsWith(".png");
 
   const fallback = (
     <div className="absolute inset-0 grid place-items-center"
@@ -40,17 +43,17 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
     >
       <Link href={`/product/${product.slug}`} className="group block">
         {/* Image — kept clean; controls overlay, product info sits below */}
-        <div className="relative overflow-hidden rounded-[1.4rem] bg-graphite aspect-[4/5] transition-[transform,box-shadow] duration-500 ease-elegant group-hover:-translate-y-1 group-hover:shadow-deep">
+        <div className={`relative overflow-hidden rounded-[1.4rem] aspect-[4/5] transition-[transform,box-shadow] duration-500 ease-elegant group-hover:-translate-y-1 group-hover:shadow-deep ${isCutout ? "bg-mist border border-line" : "bg-graphite"}`}>
           <Photo
             src={product.image ?? productImg(product.id)}
             alt={product.name}
             fallback={fallback}
             sizes="(max-width: 768px) 50vw, 25vw"
             imgClassName={`transition-transform duration-700 ease-elegant group-hover:scale-[1.06] ${
-              (product.image ?? "").endsWith(".png") ? "object-contain p-3" : "object-cover"
+              isCutout ? "object-contain p-3" : "object-cover"
             }`}
           />
-          <div className={`absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/5 ${soldOut ? "backdrop-grayscale" : ""}`}/>
+          <div className={`absolute inset-0 ${isCutout ? "" : "bg-gradient-to-t from-black/25 via-transparent to-black/5"} ${soldOut ? "backdrop-grayscale" : ""}`}/>
 
           {/* badge */}
           {soldOut ? (
