@@ -24,19 +24,20 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
   const res = await api.products.list({}).catch(() => ({ data: [] as Product[] }));
   const all = res.data;
 
-  const trendFeatured = all.find(p => p.badge === "Sale") || all[0];
+  const trendFeatured = all.find(p => p.slug === "converse-suede-low-black") || all.find(p => p.badge === "Sale") || all[0];
   const trending = all.filter(p => p.id !== trendFeatured?.id).slice(0, 4);
   const vibe = all.slice(6, 14);
-  const newArrivals = [...all.filter(p => p.badge === "New"), ...all].filter((p, i, a) => a.findIndex(x => x.id === p.id) === i).slice(0, 5);
+  const newArrivals = [all.find(p => p.slug === "converse-chuck-low-black-stars"), ...all.filter(p => p.badge === "New"), ...all].filter(Boolean).filter((p, i, a) => a.findIndex(x => x!.id === p!.id) === i).slice(0, 5) as Product[];
   const hiTops = all.filter(p => p.shape === "hightop").slice(0, 4);
   const lowTops = all.filter(p => p.shape === "lowtop").slice(0, 4);
   const nb = all.filter(p => p.category === "New Balance");
   const limited = nb[0] || all[0];
+  // Prefer transparent cutouts (clean floating shoe) for the hero.
   const heroSet = [
-    all.find(p => p.slug === "converse-chuck70-hi-navy"),
-    all.find(p => p.slug === "nb-1906a-silver"),
-    all.find(p => p.slug === "converse-one-star-mustard"),
-    all.find(p => p.slug === "converse-suede-low-red"),
+    all.find(p => p.slug === "converse-chuck70-hi-black"),
+    all.find(p => p.slug === "converse-chuck-low-blue-check"),
+    all.find(p => p.slug === "converse-star-player-burgundy"),
+    all.find(p => p.slug === "converse-retro-trainer-burgundy"),
   ].filter(Boolean) as Product[];
 
   const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://xmas.mn").replace(/\/$/, "");
