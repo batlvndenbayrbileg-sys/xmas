@@ -1,4 +1,4 @@
-# NARAN — production stack for a single VPS (Dokploy / Coolify / plain compose).
+# X-MAS — production stack for a single VPS (Dokploy / Coolify / plain compose).
 #
 # Values are interpolated from an `.env` file placed NEXT TO this file
 # (infra/.env — see infra/.env.prod.example). Secrets never live in git.
@@ -6,8 +6,8 @@
 # Dokploy: create a "Docker Compose" app pointing at this file, then assign
 # public domains (with TLS) to the `web`, `medusa`, and `api` services in the UI
 # — Dokploy's Traefik routes them. Services talk to each other over the internal
-# `naran` network by service name (postgres, redis, meilisearch, medusa, api).
-name: naran
+# `xmas` network by service name (postgres, redis, meilisearch, medusa, api).
+name: xmas
 
 x-restart: &restart
   restart: unless-stopped
@@ -20,7 +20,7 @@ x-medusa-env: &medusa-env
   # Redis-backed event bus + workflow engine are enabled in production so the
   # server and worker share events/jobs.
   MEDUSA_WORKER_MODE: server
-  DATABASE_URL: postgres://${POSTGRES_USER:-naran}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-naran}
+  DATABASE_URL: postgres://${POSTGRES_USER:-xmas}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-xmas}
   REDIS_URL: redis://redis:6379
   MEILISEARCH_HOST: http://meilisearch:7700
   MEILISEARCH_API_KEY: ${MEILISEARCH_API_KEY}
@@ -45,26 +45,26 @@ x-medusa-env: &medusa-env
   # they belong in the shared env (B7).
   STOREFRONT_URL: ${STOREFRONT_URL:-http://localhost:3000}
   RESEND_API_KEY: ${RESEND_API_KEY:-}
-  EMAIL_FROM: ${EMAIL_FROM:-NARAN <onboarding@resend.dev>}
+  EMAIL_FROM: ${EMAIL_FROM:-X-MAS <onboarding@resend.dev>}
 
 services:
   postgres:
     image: postgres:16-alpine
     <<: *restart
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-naran}
+      POSTGRES_USER: ${POSTGRES_USER:-xmas}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in infra/.env}
-      POSTGRES_DB: ${POSTGRES_DB:-naran}
+      POSTGRES_DB: ${POSTGRES_DB:-xmas}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-naran} -d ${POSTGRES_DB:-naran}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-xmas} -d ${POSTGRES_DB:-xmas}"]
       interval: 5s
       timeout: 5s
       retries: 20
     # Memory caps tuned for a ~4–6GB VPS; raise if you scale up (H7).
     mem_limit: 768m
-    networks: [naran]
+    networks: [xmas]
 
   redis:
     image: redis:7-alpine
@@ -78,7 +78,7 @@ services:
       timeout: 5s
       retries: 20
     mem_limit: 256m
-    networks: [naran]
+    networks: [xmas]
 
   meilisearch:
     image: getmeili/meilisearch:v1.53
@@ -90,14 +90,14 @@ services:
     volumes:
       - meilidata:/meili_data
     mem_limit: 512m
-    networks: [naran]
+    networks: [xmas]
 
   # One-shot: run DB migrations exactly once, then exit. The server and worker
   # wait for this to complete, so migrations never race across replicas (H8).
   medusa-migrate:
     build:
       context: ../medusa-backend/apps/backend
-    image: naran-medusa:latest
+    image: xmas-medusa:latest
     restart: "no"
     depends_on:
       postgres: { condition: service_healthy }
@@ -105,12 +105,12 @@ services:
       <<: *medusa-env
     command: ["sh", "-c", "cd .medusa/server && npx medusa db:migrate"]
     mem_limit: 768m
-    networks: [naran]
+    networks: [xmas]
 
   # HTTP server (admin + store/API). Migrations already ran in medusa-migrate, so
   # this only starts the server (no db:migrate here → safe to scale to replicas).
   medusa:
-    image: naran-medusa:latest
+    image: xmas-medusa:latest
     <<: *restart
     depends_on:
       postgres: { condition: service_healthy }
@@ -129,12 +129,12 @@ services:
     mem_limit: 1024m
     expose:
       - "9000"
-    networks: [naran]
+    networks: [xmas]
 
   # Background worker (subscribers, scheduled jobs — MeiliSearch indexing, emails).
   # Same image; MEDUSA_WORKER_MODE=worker. Waits for migrations, then starts.
   medusa-worker:
-    image: naran-medusa:latest
+    image: xmas-medusa:latest
     <<: *restart
     depends_on:
       postgres: { condition: service_healthy }
@@ -145,7 +145,7 @@ services:
       MEDUSA_WORKER_MODE: worker
     command: ["sh", "-c", "cd .medusa/server && npm run start"]
     mem_limit: 640m
-    networks: [naran]
+    networks: [xmas]
 
   api:
     build:
@@ -161,7 +161,7 @@ services:
       # Medusa (internal service URL) + publishable key — the gateway completes orders.
       MEDUSA_URL: http://medusa:9000
       MEDUSA_PK: ${NEXT_PUBLIC_MEDUSA_PK}
-      NEXT_PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-https://naran.mn}
+      NEXT_PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-https://xmas.mn}
       # Botxon (botxon.chat → QPay & bank apps) — the ACTIVE gateway. REQUIRED in
       # prod: the api refuses to boot without BOTXON_GATEWAY_KEY (blank = mock,
       # would auto-"pay"). Webhook: https://<storefront>/api/webhooks/botxon
@@ -173,7 +173,7 @@ services:
       WIRE_WEBHOOK_SECRET: ${WIRE_WEBHOOK_SECRET:-}
       # Email (Resend).
       RESEND_API_KEY: ${RESEND_API_KEY:-}
-      EMAIL_FROM: ${EMAIL_FROM:-NARAN <onboarding@resend.dev>}
+      EMAIL_FROM: ${EMAIL_FROM:-X-MAS <onboarding@resend.dev>}
       # Error monitoring (Sentry, optional).
       SENTRY_DSN: ${SENTRY_DSN:-}
     healthcheck:
@@ -185,7 +185,7 @@ services:
     mem_limit: 256m
     expose:
       - "4000"
-    networks: [naran]
+    networks: [xmas]
 
   web:
     build:
@@ -198,7 +198,7 @@ services:
         NEXT_PUBLIC_MEDUSA_REGION: ${NEXT_PUBLIC_MEDUSA_REGION:?set NEXT_PUBLIC_MEDUSA_REGION in infra/.env}
         NEXT_PUBLIC_USE_MEDUSA: "1"
         NEXT_PUBLIC_MEILISEARCH: ${NEXT_PUBLIC_MEILISEARCH:-1}
-        NEXT_PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-https://naran.mn}
+        NEXT_PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-https://xmas.mn}
         NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
         NEXT_PUBLIC_META_PIXEL_ID: ${NEXT_PUBLIC_META_PIXEL_ID:-}
         NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_SENTRY_DSN:-}
@@ -222,7 +222,7 @@ services:
     mem_limit: 512m
     expose:
       - "3000"
-    networks: [naran]
+    networks: [xmas]
 
 volumes:
   pgdata:
@@ -230,5 +230,5 @@ volumes:
   meilidata:
 
 networks:
-  naran:
+  xmas:
     driver: bridge
