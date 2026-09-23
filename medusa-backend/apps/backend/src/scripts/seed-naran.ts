@@ -3,8 +3,13 @@ import { Modules, ContainerRegistrationKeys } from "@medusajs/framework/utils";
 import { createProductsWorkflow } from "@medusajs/medusa/core-flows";
 import { MN_TO_HANDLE } from "./seed-categories";
 
-// Product photos live in web/public/products/<handle>.jpg (X-MAS store shots).
-const IMG = (handle: string) => `/products/${handle}.jpg`;
+// Product photos live in web/public/products/<handle>.{jpg|png}. These handles
+// have transparent-background cutouts (PNG); the rest are promo-card JPGs.
+const PNG = new Set([
+  "converse-suede-low-black", "converse-chuck-low-black-stars", "converse-chuck-low-blue-check",
+  "converse-chuck70-hi-black", "converse-retro-trainer-burgundy", "converse-star-player-burgundy",
+]);
+const IMG = (handle: string) => `/products/${handle}.${PNG.has(handle) ? "png" : "jpg"}`;
 
 type Seed = {
   title: string; handle: string; price: number; cat: string;

@@ -46,7 +46,9 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             alt={product.name}
             fallback={fallback}
             sizes="(max-width: 768px) 50vw, 25vw"
-            imgClassName="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-elegant group-hover:scale-[1.06]"
+            imgClassName={`transition-transform duration-700 ease-elegant group-hover:scale-[1.06] ${
+              (product.image ?? "").endsWith(".png") ? "object-contain p-3" : "object-cover"
+            }`}
           />
           <div className={`absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/5 ${soldOut ? "backdrop-grayscale" : ""}`}/>
 
