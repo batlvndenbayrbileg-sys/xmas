@@ -1,4 +1,29 @@
-# NARAN — Railway deploy (low-maintenance PaaS)
+# X-MAS / NARAN — Railway deploy (low-maintenance PaaS)
+
+> ## ⭐ X-MAS deploy — read this first
+> This repo is the **X-MAS sneaker store**. Follow the full guide below, but with
+> these X-MAS values (they override the NARAN examples):
+> - **Repo:** `github.com/batlvndenbayrbileg-sys/xmas`, branch `main`
+> - **Services / root dirs / Dockerfiles** — unchanged: `medusa-backend/apps/backend`, `api`, `web`
+> - **Branding env:** `EMAIL_FROM=X-MAS <onboarding@resend.dev>`; domain `xmas.mn` (+ `api.xmas.mn` for medusa)
+> - **CORS:** point `STORE_CORS` / `AUTH_CORS` at the web domain, `ADMIN_CORS` at the medusa domain
+> - **Seed order** (step 5), run in the medusa service shell:
+>   ```bash
+>   cd .medusa/server
+>   npx medusa exec ./src/scripts/seed-region.ts
+>   npx medusa exec ./src/scripts/seed-shipping.ts
+>   npx medusa exec ./src/scripts/seed-mnt.ts
+>   npx medusa exec ./src/scripts/seed-categories.ts   # Converse + New Balance
+>   npx medusa exec ./src/scripts/seed-naran.ts        # 30 X-MAS products
+>   npx medusa exec ./src/scripts/seed-inventory.ts
+>   npx medusa user -e admin@xmas.mn -p '<STRONG_PASSWORD>'
+>   ```
+> - **Admin:** `admin@xmas.mn`. After seeding, copy the publishable key + MNT region
+>   into the **web** service (`NEXT_PUBLIC_MEDUSA_PK` / `NEXT_PUBLIC_MEDUSA_REGION`) and redeploy web.
+> - Payments: set the `BOTXON_*` vars on **api** from your Botxon gateway.
+> - The build is verified (`npm run build` passes locally). Everything else below applies as-is.
+
+
 
 Railway runs the whole stack with **no server to maintain**: push to GitHub →
 auto-deploy, **managed Postgres** with automatic backups, TLS, restarts. You do a
