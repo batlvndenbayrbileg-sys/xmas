@@ -12,6 +12,8 @@ import { HeroKick } from "./_components/HeroKick";
 import { Countdown } from "./_components/Countdown";
 import { BrandMarquee } from "./_components/BrandMarquee";
 import { Testimonials3D } from "./_components/Testimonials3D";
+import { Parallax } from "./_components/Parallax";
+import { ScrollProgress } from "./_components/ScrollProgress";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { tFor, type Lang } from "@/lib/i18n";
 
@@ -47,6 +49,7 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
+      <ScrollProgress />
 
       <div className="mesh-light min-h-screen">
         <Nav />
@@ -66,7 +69,7 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
         <section className={`${wrap} mt-14 sm:mt-20`}>
           <SectionHead title={t("home.trending")} href="/shop" cta={t("common.seeAll")} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 mt-6">
-            {trendFeatured && <FeaturedCard product={trendFeatured} t={t} />}
+            {trendFeatured && <Reveal blur><FeaturedCard product={trendFeatured} t={t} /></Reveal>}
             <div className="grid grid-cols-2 gap-4 sm:gap-5">
               {trending.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
@@ -75,17 +78,19 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
 
         {/* ===== PRODUCT FEATURES ===== */}
         <section className={`${wrap} mt-16 sm:mt-24`}>
-          <h2 className="hd-2">{t("home.features")}</h2>
-          <p className="text-muted mt-1">{t("home.featuresSub")}</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          <Reveal>
+            <h2 className="hd-2">{t("home.features")}</h2>
+            <p className="text-muted mt-1">{t("home.featuresSub")}</p>
+          </Reveal>
+          <Reveal blur className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
             <FeatureCard img={all.find(p=>p.slug==="converse-chuck-low-blue-check")?.image} title={t("home.feat1")} desc={t("home.feat1d")} />
             <FeatureCard img={all.find(p=>p.slug==="converse-retro-trainer-green")?.image} title={t("home.feat3")} desc={t("home.feat3d")} />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+          </Reveal>
+          <Reveal blur delay={0.08} className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
             <FeatureCard img={all.find(p=>p.slug==="converse-chuck70-hi-black")?.image} title={t("home.feat2")} desc={t("home.feat2d")} small />
             <FeatureCard img={all.find(p=>p.slug==="nb-1906a-silver")?.image} title={t("home.feat4")} desc={t("home.feat4d")} small />
             <FeatureCard img={all.find(p=>p.slug==="converse-chuck70-hi-natural")?.image} title={t("home.feat5")} desc={t("home.feat5d")} small />
-          </div>
+          </Reveal>
         </section>
 
         {/* ===== CHOOSE YOUR VIBE (coverflow) ===== */}
@@ -108,7 +113,7 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
           <div className="text-[11px] uppercase tracking-[.22em] font-semibold text-accent">{t("home.collection")}</div>
           <SectionHead title={t("home.newArrivals")} href="/shop?filter=new" cta={t("home.exploreMore")} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 mt-6">
-            {newArrivals[0] && <FeaturedCard product={newArrivals[0]} t={t} drop />}
+            {newArrivals[0] && <Reveal blur><FeaturedCard product={newArrivals[0]} t={t} drop /></Reveal>}
             <div className="grid grid-cols-2 gap-4 sm:gap-5">
               {newArrivals.slice(1, 5).map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
@@ -128,6 +133,7 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
         {/* ===== LIMITED DROP ===== */}
         {limited && (
         <section className={`${wrap} mt-16 sm:mt-24`}>
+          <Reveal blur>
           <div className="relative overflow-hidden rounded-[2rem] card-dark text-white p-6 sm:p-10 lg:p-12">
             <div className="absolute -left-24 -bottom-24 w-80 h-80 rounded-full bg-accent/25 blur-3xl" />
             <div className="absolute right-8 top-8 hidden sm:block font-display text-[13px] uppercase tracking-[.3em] text-white/25">X · MAS</div>
@@ -144,21 +150,26 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
                 </Link>
               </div>
               <div className="relative rounded-[1.5rem] bg-white/[.05] border border-white/10 overflow-hidden aspect-[4/3]">
-                <Photo src={limited.image} alt={limited.name} imgClassName="object-contain p-3" />
+                <Parallax amount={24} className="absolute inset-0">
+                  <Photo src={limited.image} alt={limited.name} imgClassName="object-contain p-3" />
+                </Parallax>
               </div>
             </div>
           </div>
+          </Reveal>
         </section>
         )}
 
         {/* ===== NEWSLETTER ===== */}
         <section className={`${wrap} mt-16 sm:mt-24 mb-6`}>
+          <Reveal blur>
           <div className="relative overflow-hidden rounded-[2rem] bg-accent-soft border border-accent/20 p-8 sm:p-12 text-center">
             <span className="text-[11px] uppercase tracking-[.24em] font-semibold text-accent-deep">{t("home.newsKicker")}</span>
             <h2 className="hd-2 mt-2 text-ink">{t("home.newsTitle")}</h2>
             <p className="text-ink/65 mt-2 max-w-[440px] mx-auto">{t("home.newsDesc")}</p>
             <div className="mt-6 max-w-[440px] mx-auto"><NewsletterForm /></div>
           </div>
+          </Reveal>
         </section>
       </div>
 
@@ -171,10 +182,10 @@ export default async function HomePage({ params }: { params: { lang: Lang } }) {
 
 function SectionHead({ title, href, cta }: { title: string; href: string; cta: string }) {
   return (
-    <div className="flex items-end justify-between gap-4">
+    <Reveal className="flex items-end justify-between gap-4">
       <h2 className="hd-2">{title}</h2>
       <Link href={href} className="chip shrink-0">{cta} <ArrowRight width={13} height={13}/></Link>
-    </div>
+    </Reveal>
   );
 }
 
@@ -188,7 +199,9 @@ function FeaturedCard({ product, t, drop }: { product: Product; t: (k:string)=>s
         {drop && <div className="mt-4"><span className="font-display text-[22px] text-accent uppercase leading-none">{t("home.justDropped")}</span></div>}
       </div>
       <div className="pointer-events-none absolute right-0 bottom-0 w-[78%] h-[72%]">
-        <Photo src={product.image} alt={product.name} imgClassName="absolute inset-0 w-full h-full object-contain object-right-bottom drop-shadow-[0_24px_30px_rgba(22,21,21,.25)] transition-transform duration-500 group-hover:scale-105" />
+        <Parallax amount={26} className="relative w-full h-full">
+          <Photo src={product.image} alt={product.name} imgClassName="object-contain object-right-bottom drop-shadow-[0_24px_30px_rgba(22,21,21,.25)] transition-transform duration-500 group-hover:scale-105" />
+        </Parallax>
       </div>
       <span className="relative z-10 self-start mt-4 w-11 h-11 rounded-full bg-accent text-white grid place-items-center group-hover:bg-accent-deep transition-colors shadow-[0_10px_24px_-8px_rgba(241,89,43,.7)]">
         <ArrowUpRight width={16} height={16} />
@@ -199,8 +212,8 @@ function FeaturedCard({ product, t, drop }: { product: Product; t: (k:string)=>s
 
 function FeatureCard({ img, title, desc, small }: { img?: string; title: string; desc: string; small?: boolean }) {
   return (
-    <div className={`relative overflow-hidden rounded-[1.4rem] ${small ? "min-h-[180px]" : "min-h-[220px]"} bg-graphite`}>
-      {img && <Photo src={img} alt={title} imgClassName="absolute inset-0 w-full h-full object-cover" />}
+    <div className={`group relative overflow-hidden rounded-[1.4rem] ${small ? "min-h-[180px]" : "min-h-[220px]"} bg-graphite`}>
+      {img && <Photo src={img} alt={title} imgClassName="object-cover transition-transform duration-700 ease-elegant group-hover:scale-105" />}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
       <div className="absolute left-5 bottom-5 right-5 text-white">
         <div className="flex items-center gap-2">
