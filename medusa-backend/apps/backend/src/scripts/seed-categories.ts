@@ -5,11 +5,8 @@ import { createProductCategoriesWorkflow } from "@medusajs/medusa/core-flows";
 // Canonical X-MAS brand taxonomy — lives in Medusa so it scales to a 10k+ catalog.
 // handle = storefront category key (lowercased slug); name = brand display.
 export const CATEGORIES = [
-  { handle: "nike", name: "Nike" },
-  { handle: "adidas", name: "Adidas" },
-  { handle: "new-balance", name: "New Balance" },
-  { handle: "puma", name: "Puma" },
   { handle: "converse", name: "Converse" },
+  { handle: "new-balance", name: "New Balance" },
 ];
 
 // Brand name → handle, so seeders/importers can map their brand column.

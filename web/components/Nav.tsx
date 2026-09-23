@@ -88,9 +88,14 @@ export function Nav() {
   );
 
   return (
-    <>
+    <div className="sticky top-0 z-40 px-3 sm:px-4 lg:px-5 pt-3 pb-1">
+     <div className="mx-auto max-w-[1280px] rounded-[1.5rem] bg-white/90 backdrop-blur-xl border border-line shadow-[0_14px_34px_-18px_rgba(22,21,21,.35)] px-3 sm:px-4 py-2">
       {/* ---------- Mobile bar ---------- */}
-      <div className="lg:hidden flex items-center gap-2.5">
+      <div className="lg:hidden flex items-center gap-2">
+        <Link href="/" aria-label="X-MAS" className="shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.jpg" alt="X-MAS" className="h-9 w-auto object-contain" />
+        </Link>
         <form onSubmit={search} className="flex-1 min-w-0 h-11 bg-white/70 border border-white/60 shadow-soft rounded-pill flex items-center gap-2.5 px-4 backdrop-blur focus-within:bg-white transition">
           <button type="submit" className="text-subtle hover:text-ink shrink-0 active:scale-90 transition" aria-label={t("nav.search")}><SearchIcon width={16} height={16}/></button>
           <input value={q} onChange={e => setQ(e.target.value)} aria-label={t("nav.search")} data-search-input
@@ -107,18 +112,18 @@ export function Nav() {
           always has reserved space and can never be overlapped by the side
           content. Secondary links, search width and the account name scale down
           between lg and xl so nothing ever collides at tighter widths. */}
-      <nav className="hidden lg:grid grid-cols-[auto_1fr_auto] items-center gap-3 xl:gap-4 bg-white/65 backdrop-blur-xl rounded-pill pl-5 xl:pl-6 pr-2 py-2.5 border border-white/60 ring-1 ring-black/[.04] shadow-[0_10px_34px_-16px_rgba(10,10,11,.28)]">
+      <nav className="hidden lg:grid grid-cols-[auto_1fr_auto] items-center gap-3 xl:gap-4 pl-3 xl:pl-4 pr-1 py-0.5">
         <div className="flex items-center gap-5 xl:gap-6 min-w-0">
-          {[["/shop","nav.shop",true],["/shop?category=Nike","cat.Nike",false],["/shop?category=Adidas","cat.Adidas",false],["/shop?category=New%20Balance","cat.New Balance",false]].map(([h,k,pri]) => (
+          {[["/shop","nav.shop",true],["/shop?category=Converse","cat.Converse",false],["/shop?category=New%20Balance","cat.New Balance",false],["/shop?filter=sale","nav.accessories",false]].map(([h,k,pri]) => (
             <Link key={k as string} href={h as string}
               aria-current={pathname === h ? "page" : undefined}
               className={`relative whitespace-nowrap text-[12px] uppercase tracking-[.12em] font-medium transition-colors after:absolute after:left-0 after:-bottom-1.5 after:h-[1.5px] after:bg-accent after:transition-all after:duration-300 after:ease-elegant hover:after:w-full ${pri ? "inline-flex" : "hidden xl:inline-flex"} ${pathname===h?"text-ink after:w-full":"text-muted hover:text-ink after:w-0"}`}>{t(k as string)}</Link>
           ))}
         </div>
 
-        <Link href="/" className="group justify-self-center flex items-center gap-2 font-display text-[20px] xl:text-[22px] tracking-[.04em] leading-none whitespace-nowrap">
-          <span className="w-2 h-2 rounded-full bg-accent transition-transform duration-300 ease-spring group-hover:scale-125"/>
-          X-MAS
+        <Link href="/" aria-label="X-MAS" className="group justify-self-center flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.jpg" alt="X-MAS" className="h-16 w-auto object-contain transition-transform duration-300 ease-spring group-hover:scale-105" />
         </Link>
 
         <div className="flex items-center gap-2 xl:gap-2.5 justify-self-end">
@@ -136,6 +141,7 @@ export function Nav() {
           </Link>
         </div>
       </nav>
-    </>
+     </div>
+    </div>
   );
 }

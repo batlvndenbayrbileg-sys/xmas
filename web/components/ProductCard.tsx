@@ -89,7 +89,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             disabled={soldOut}
             onClick={(e) => { e.preventDefault(); if (soldOut) return; add(product); flyToCart(e.currentTarget, product.accent); showToast(`${product.name} · ${t("common.addToBag")}`); }}
             className={`absolute right-3 bottom-3 z-10 w-10 h-10 rounded-full grid place-items-center transition-all duration-200 ease-elegant ${
-              soldOut ? "bg-white/40 text-ink/40 cursor-not-allowed" : "bg-ink text-white hover:bg-accent hover:scale-110 active:scale-95 shadow-soft"
+              soldOut ? "bg-white/40 text-ink/40 cursor-not-allowed" : "bg-accent text-white hover:bg-accent-deep hover:scale-110 active:scale-95 shadow-[0_8px_20px_-6px_rgba(241,89,43,.6)]"
             }`}
             aria-label={soldOut ? t("common.soldOut") : t("common.addToBag")}
           >
@@ -104,7 +104,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             <p className="tiny truncate mt-0.5">{t(`cat.${product.category}`)}</p>
           </div>
           <div className="text-right shrink-0">
-            <span className="font-display text-[15px] sm:text-[16px] num-tabular block leading-tight">{money(product.price)}</span>
+            <span className="font-display text-[15px] sm:text-[16px] num-tabular block leading-tight text-accent-deep">{money(product.price)}</span>
             {product.was && <span className="tiny line-through num-tabular">{money(product.was)}</span>}
           </div>
         </div>

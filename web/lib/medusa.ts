@@ -4,7 +4,7 @@ import { ENRICH, DEFAULT_ENRICH } from "./enrich";
 // Medusa category handle → storefront Category key. Taxonomy lives in Medusa
 // (product categories), so this scales to a 10k+ catalog with no per-product map.
 const HANDLE_TO_CATEGORY: Record<string, Category> = {
-  nike: "Nike", adidas: "Adidas", "new-balance": "New Balance", puma: "Puma", converse: "Converse",
+  converse: "Converse", "new-balance": "New Balance",
 };
 
 const URL = process.env.NEXT_PUBLIC_MEDUSA_URL || "http://localhost:9000";

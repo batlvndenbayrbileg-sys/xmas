@@ -2,13 +2,6 @@
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useT } from "./LangProvider";
 
-// Inline icons (no extra deps).
-const SunMark = (p: any) => (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...p}>
-    <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
-    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-  </svg>
-);
 const IgIcon = (p: any) => (
   <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
     <rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
@@ -33,60 +26,48 @@ const PhoneIcon = (p: any) => (
 export function Footer() {
   const t = useT();
   return (
-    <footer className="relative z-10 hidden lg:block mx-3 mb-3 overflow-hidden rounded-[1.75rem] border border-line bg-white px-6 pt-12 pb-7 text-ink shadow-[0_24px_60px_-40px_rgba(232,85,10,.35)] sm:mx-4 sm:rounded-[2.25rem] sm:px-10 lg:mx-5">
-      {/* faint warm corner bloom */}
-      <div className="pointer-events-none absolute -top-24 right-[8%] h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
-
+    <footer className="relative z-10 mx-3 mb-3 overflow-hidden rounded-[1.75rem] bg-ink px-6 pt-12 pb-8 text-white sm:mx-4 sm:rounded-[2.25rem] sm:px-10 lg:mx-5">
       <div className="relative mx-auto max-w-[1180px]">
-        <div className="flex flex-col gap-10 md:flex-row md:justify-between md:gap-12">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10">
           {/* Brand */}
-          <div className="flex flex-col items-center text-center md:items-start md:max-w-xs md:text-left">
-            <div className="flex items-center gap-2.5">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-accent to-accent-deep text-white shadow-[0_8px_20px_-6px_rgba(255,106,26,.5)]">
-                <SunMark />
-              </span>
-              <span className="font-display text-2xl font-black tracking-tight">X-MAS</span>
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-accent" />
+              <span className="font-display text-2xl uppercase tracking-[.06em]"><span className="text-accent">X</span>-MAS</span>
             </div>
-            <p className="mt-5 text-sm leading-relaxed text-muted">{t("foot.tagline")}</p>
-
-            <div className="mt-5 flex flex-col items-center gap-2 md:items-start">
-              <a href="tel:+97677000329" className="inline-flex items-center gap-2 text-sm text-ink/70 hover:text-accent transition-colors">
-                <PhoneIcon className="text-accent" /> {t("foot.phone")}
-              </a>
-              <a href="mailto:support@xmas.mn" className="inline-flex items-center gap-2 text-sm text-ink/70 hover:text-accent transition-colors">
-                <MailIcon className="text-accent" /> support@xmas.mn
-              </a>
+            <p className="mt-4 text-sm leading-relaxed text-white/55 max-w-[240px]">{t("foot.tagline")}</p>
+            <div className="mt-5 flex flex-col gap-2">
+              <a href="tel:+97677000329" className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-accent transition-colors"><PhoneIcon className="text-accent" /> {t("foot.phone")}</a>
+              <a href="mailto:support@xmas.mn" className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-accent transition-colors"><MailIcon className="text-accent" /> support@xmas.mn</a>
             </div>
-
-            <div className="mt-6 flex gap-2.5">
+            <div className="mt-5 flex gap-2.5">
               <Social href="https://instagram.com" label="Instagram"><IgIcon /></Social>
               <Social href="https://facebook.com" label="Facebook"><FbIcon /></Social>
             </div>
           </div>
 
-          {/* Nav — only real destinations (placeholder About/Stores/Journal/FAQ removed). */}
-          <nav className="grid w-full grid-cols-2 gap-8 text-center md:w-auto md:text-left">
-            <FootCol title={t("foot.shop")} links={[["/shop?category=Nike",t("cat.Nike")],["/shop?category=Adidas",t("cat.Adidas")],["/shop?category=New%20Balance",t("cat.New Balance")],["/shop?category=Converse",t("cat.Converse")]]}/>
-            <FootCol title={t("foot.support")} links={[["/shop",t("bc.shop")],["/refund-policy",t("foot.refund")],["/terms",t("foot.terms")],["/privacy",t("foot.privacy")]]}/>
-          </nav>
+          <FootCol title={t("foot.brand")} links={[["/shop?category=Converse", t("cat.Converse")], ["/shop?category=New%20Balance", t("cat.New Balance")], ["/shop?filter=new", t("home.newArrivals")], ["/shop?filter=sale", t("nav.accessories")]]} />
+          <FootCol title={t("foot.support")} links={[["/shop", t("bc.shop")], ["/refund-policy", t("foot.refund")], ["/terms", t("foot.terms")], ["/privacy", t("foot.privacy")]]} />
+          <div>
+            <h5 className="mb-4 text-[11px] font-semibold uppercase tracking-[.2em] text-accent">{t("foot.payments")}</h5>
+            <div className="flex flex-wrap gap-2">
+              {["QPay", "Хаан", "TDB", "Голомт", "Storepay"].map(m => (
+                <span key={m} className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[12px] text-white/70">{m}</span>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Payment */}
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-2 border-t border-line pt-6 md:justify-start">
-          <span className="mr-1 text-[11px] uppercase tracking-[.2em] text-subtle">{t("foot.payments")}</span>
-          {["QPay", "Хаан банк", "TDB", "Голомт", "Most Money"].map((m) => (
-            <span key={m} className="rounded-full border border-line bg-surface-2 px-3 py-1 text-[12px] text-ink/70">{m}</span>
-          ))}
-        </div>
+        {/* Big watermark — sits behind, clipped by the footer's rounded box */}
+        <span aria-hidden className="pointer-events-none select-none absolute -bottom-6 sm:-bottom-10 left-1/2 -translate-x-1/2 font-display uppercase tracking-[.02em] text-[26vw] leading-[.7] text-white/[.05] whitespace-nowrap">X-MAS</span>
 
-        {/* Bottom */}
-        <div className="mt-6 flex flex-col-reverse items-center gap-3 text-[13px] text-muted sm:flex-row sm:justify-between">
+        <div className="relative mt-14 flex flex-col-reverse items-center gap-3 border-t border-white/10 pt-6 text-[13px] text-white/50 sm:flex-row sm:justify-between">
           <span>{t("foot.rights")}</span>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
             <Link href="/privacy" className="hover:text-accent transition-colors">{t("foot.privacy")}</Link>
             <Link href="/terms" className="hover:text-accent transition-colors">{t("foot.terms")}</Link>
             <Link href="/refund-policy" className="hover:text-accent transition-colors">{t("foot.refund")}</Link>
-            <span className="hidden sm:inline text-line">·</span>
+            <span className="hidden sm:inline text-white/20">·</span>
             <span className="text-[11px] uppercase tracking-[.15em] text-accent">{t("foot.slogan")}</span>
           </div>
         </div>
@@ -97,10 +78,8 @@ export function Footer() {
 
 function Social({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
-    <a
-      href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-      className="grid h-9 w-9 place-items-center rounded-full border border-line bg-white text-ink/70 hover:bg-accent hover:text-white hover:border-accent transition-colors"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+      className="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/5 text-white/70 hover:bg-accent hover:text-white hover:border-accent transition-colors">
       {children}
     </a>
   );
@@ -112,9 +91,7 @@ function FootCol({ title, links }: { title: string; links: [string, string][] })
       <h5 className="mb-4 text-[11px] font-semibold uppercase tracking-[.2em] text-accent">{title}</h5>
       <ul className="space-y-2.5">
         {links.map(([h, l]) => (
-          <li key={l}>
-            <Link href={h} className="text-sm text-ink/70 hover:text-accent transition-colors">{l}</Link>
-          </li>
+          <li key={l}><Link href={h} className="text-sm text-white/70 hover:text-accent transition-colors">{l}</Link></li>
         ))}
       </ul>
     </div>

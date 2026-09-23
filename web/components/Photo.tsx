@@ -27,9 +27,11 @@ export function Photo({
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
   if (!src || failed) return <>{fallback}</>;
-  const revealed = loaded || !!priority;
+  // Fade in on decode, but NEVER stay hidden: cached images can skip onLoad, so
+  // a ref callback marks already-complete images visible immediately.
   return (
     <Image
+      ref={(el) => { if (el && el.complete) setLoaded(true); }}
       src={src}
       alt={alt}
       fill
@@ -39,9 +41,8 @@ export function Photo({
       onLoad={() => setLoaded(true)}
       className={imgClassName ?? className}
       style={priority ? undefined : {
-        opacity: revealed ? 1 : 0,
-        transform: revealed ? undefined : "scale(1.03)",
-        transition: "opacity .6s ease, transform .7s cubic-bezier(.22,.61,.36,1)",
+        opacity: loaded ? 1 : 0,
+        transition: "opacity .5s ease",
       }}
     />
   );

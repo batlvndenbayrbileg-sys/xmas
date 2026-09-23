@@ -4,201 +4,223 @@ import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
 import type { Product } from "@/lib/types";
 import { Photo } from "@/components/Photo";
-import { HeroCarousel, type Slide } from "@/components/HeroCarousel";
 import { ArrowUpRight, ArrowRight } from "@/components/Icons";
-import { api } from "@/lib/api";
-import { medusa } from "@/lib/medusa";
-import { PRODUCT_IMG, HERO_IMG, FILM_IMG, productImg } from "@/lib/images";
+import { api, money } from "@/lib/api";
 import { NewsletterForm } from "./_components/NewsletterForm";
 import { Reveal } from "./_components/Reveal";
-import { ValueProps } from "./_components/ValueProps";
-import { CategoryRail } from "./_components/CategoryRail";
-import { Marquee } from "./_components/Marquee";
+import { HeroKick } from "./_components/HeroKick";
+import { Countdown } from "./_components/Countdown";
+import { BrandMarquee } from "./_components/BrandMarquee";
+import { Testimonials3D } from "./_components/Testimonials3D";
+import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { tFor, type Lang } from "@/lib/i18n";
 
 export const revalidate = 300;
 
-const CATS = [
-  { key: "cat.all",          href: "/shop",                         img: HERO_IMG },
-  { key: "cat.Nike",         href: "/shop?category=Nike",           img: PRODUCT_IMG.p1 },
-  { key: "cat.Adidas",       href: "/shop?category=Adidas",         img: PRODUCT_IMG.p4 },
-  { key: "cat.New Balance",  href: "/shop?category=New%20Balance",  img: PRODUCT_IMG.p3 },
-  { key: "cat.Puma",         href: "/shop?category=Puma",           img: PRODUCT_IMG.p2 },
-  { key: "cat.Converse",     href: "/shop?category=Converse",       img: PRODUCT_IMG.p5 },
-];
-
 export default async function HomePage({ params }: { params: { lang: Lang } }) {
   const t = tFor(params.lang);
-  const L = params.lang;
-  // Resilient fetch: a transient catalog/CMS outage must never fail the whole
-  // build (mirrors generateStaticParams' catch elsewhere). The page prerenders
-  // with whatever it got and ISR (revalidate) backfills once the backend is up.
-  const [productsRes, cms] = await Promise.all([
-    api.products.list({}).catch(() => ({ data: [] as Product[] })),
-    medusa.homepageContent(),
-  ]);
-  const products = productsRes.data;
-  // `hot` can be undefined if the catalog is empty (new/misconfigured store or a
-  // transient Medusa error) — never dereference it directly (H2).
-  const hot = products.find(p => p.badge === "Sale") || products[0];
-  const hotImg = hot ? (hot.image ?? productImg(hot.id)) : HERO_IMG;
+  const res = await api.products.list({}).catch(() => ({ data: [] as Product[] }));
+  const all = res.data;
 
-  const defaultSlides: Slide[] = [
-    { kicker: t("home.s1Kicker"), top: t("home.s1Top"), accent: t("home.s1Accent"), desc: t("home.s1Desc"), img: FILM_IMG, href: "/shop" },
-    { kicker: t("home.s2Kicker"), top: t("home.s2Top"), accent: t("home.s2Accent"), desc: t("home.s2Desc"), img: PRODUCT_IMG.p4, href: "/shop?category=Adidas" },
-    { kicker: t("home.s3Kicker"), top: t("home.s3Top"), accent: t("home.s3Accent"), desc: t("home.s3Desc"), img: PRODUCT_IMG.p6, href: "/shop?category=New%20Balance" },
-  ];
-  // Admin CMS overrides the defaults when hero slides have been configured.
-  const slides: Slide[] = cms?.hero?.length
-    ? cms.hero.map(s => ({
-        kicker: s.kicker[L] || s.kicker.mn,
-        top: s.top[L] || s.top.mn,
-        accent: s.accent[L] || s.accent.mn,
-        desc: s.desc[L] || s.desc.mn,
-        img: s.img || FILM_IMG,
-        href: s.href || "/shop",
-      }))
-    : defaultSlides;
+  const trendFeatured = all.find(p => p.badge === "Sale") || all[0];
+  const trending = all.filter(p => p.id !== trendFeatured?.id).slice(0, 4);
+  const vibe = all.slice(6, 14);
+  const newArrivals = [...all.filter(p => p.badge === "New"), ...all].filter((p, i, a) => a.findIndex(x => x.id === p.id) === i).slice(0, 5);
+  const hiTops = all.filter(p => p.shape === "hightop").slice(0, 4);
+  const lowTops = all.filter(p => p.shape === "lowtop").slice(0, 4);
+  const nb = all.filter(p => p.category === "New Balance");
+  const limited = nb[0] || all[0];
+  const heroSet = [
+    all.find(p => p.slug === "converse-chuck70-hi-navy"),
+    all.find(p => p.slug === "nb-1906a-silver"),
+    all.find(p => p.slug === "converse-one-star-mustard"),
+    all.find(p => p.slug === "converse-suede-low-red"),
+  ].filter(Boolean) as Product[];
 
-  // Promo banner: CMS when enabled, else the built-in copy.
-  const promo = cms?.promo?.enabled
-    ? {
-        kicker: cms.promo.kicker[L] || cms.promo.kicker.mn,
-        title: cms.promo.title[L] || cms.promo.title.mn,
-        desc: cms.promo.desc[L] || cms.promo.desc.mn,
-        cta: cms.promo.cta[L] || cms.promo.cta.mn,
-        href: cms.promo.href || "/shop?filter=sale",
-        img: cms.promo.img || hotImg,
-      }
-    : {
-        kicker: t("home.promoKicker"), title: t("home.promoTitle"), desc: t("home.promoDesc"),
-        cta: t("home.promoCta"), href: "/shop?filter=sale", img: hotImg,
-      };
-
-  // Site-wide structured data (Organization + WebSite with a Sitelinks search box).
   const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://xmas.mn").replace(/\/$/, "");
   const structuredData = [
     { "@context": "https://schema.org", "@type": "Organization", name: "X-MAS", url: SITE, logo: `${SITE}/icon.svg` },
-    {
-      "@context": "https://schema.org", "@type": "WebSite", name: "X-MAS", url: SITE,
-      potentialAction: { "@type": "SearchAction", target: `${SITE}/${L}/shop?q={search_term_string}`, "query-input": "required name=search_term_string" },
-    },
   ];
+
+  const wrap = "mx-auto max-w-[1280px] px-4 sm:px-6";
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
-      <div className="px-3 pt-3 sm:px-4 sm:pt-4 lg:px-5 lg:pt-5 pb-2 mesh-light min-h-screen">
-        <div className="max-w-[1280px] mx-auto">
-          <Nav />
 
-          {/* ===================== HERO CAROUSEL ===================== */}
-          <section className="mt-5">
-            <HeroCarousel slides={slides}/>
-          </section>
+      <div className="mesh-light min-h-screen">
+        <Nav />
 
-          {/* ===================== CATEGORY ===================== */}
-          <section className="mt-10 sm:mt-12">
-            <Reveal className="flex items-end justify-between mb-5">
-              <h2 className="font-display text-[24px] sm:text-[28px] tracking-tight">{t("home.category")}</h2>
-              <Link href="/shop" className="text-accent text-[13px] font-semibold hover:text-accent-deep transition-colors">{t("common.seeAll")}</Link>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <CategoryRail items={CATS.map(c => ({ label: t(c.key), href: c.href, img: c.img }))} />
-            </Reveal>
-          </section>
+        {/* ===== HERO ===== */}
+        <section className={`${wrap} mt-5`}>
+          <HeroKick products={heroSet.length ? heroSet : all} />
+        </section>
 
-          {/* ===================== VALUE PROPS ===================== */}
-          <ValueProps lang={params.lang} />
+        {/* ===== TRUSTED BY ===== */}
+        <section className={`${wrap} mt-12 sm:mt-16`}>
+          <h2 className="text-center font-display text-[18px] sm:text-[22px] uppercase tracking-[.06em] text-ink">{t("home.trusted")}</h2>
+          <div className="mt-4"><BrandMarquee /></div>
+        </section>
 
-          {/* ===================== RECOMMEND ===================== */}
-          <section className="mt-9">
-            <Reveal className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-[22px] sm:text-[24px] tracking-tight">{t("home.recommended")}</h2>
-              <Link href="/shop" className="text-accent text-[13px] font-semibold hover:text-accent-deep transition-colors">{t("common.seeAll")}</Link>
-            </Reveal>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-              {products.slice(0, 8).map((p, i) => <ProductCard key={p.id} product={p} index={i}/>)}
+        {/* ===== TRENDING ===== */}
+        <section className={`${wrap} mt-14 sm:mt-20`}>
+          <SectionHead title={t("home.trending")} href="/shop" cta={t("common.seeAll")} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 mt-6">
+            {trendFeatured && <FeaturedCard product={trendFeatured} t={t} />}
+            <div className="grid grid-cols-2 gap-4 sm:gap-5">
+              {trending.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
-          </section>
-        </div>
-      </div>
+          </div>
+        </section>
 
-      {/* ===================== MARQUEE ===================== */}
-      <section className="py-11 sm:py-16 mt-10 sm:mt-14 bg-mist border-y border-line">
-        <Marquee items={[t("home.mqA"), "X-MAS", t("home.mqB"), "X-MAS", t("home.mqC"), "X-MAS", t("home.mqD"), "X-MAS"]} />
-      </section>
+        {/* ===== PRODUCT FEATURES ===== */}
+        <section className={`${wrap} mt-16 sm:mt-24`}>
+          <h2 className="hd-2">{t("home.features")}</h2>
+          <p className="text-muted mt-1">{t("home.featuresSub")}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+            <FeatureCard img={all.find(p=>p.slug==="converse-chuck-low-blue-check")?.image} title={t("home.feat1")} desc={t("home.feat1d")} />
+            <FeatureCard img={all.find(p=>p.slug==="converse-retro-trainer-green")?.image} title={t("home.feat3")} desc={t("home.feat3d")} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+            <FeatureCard img={all.find(p=>p.slug==="converse-chuck70-hi-black")?.image} title={t("home.feat2")} desc={t("home.feat2d")} small />
+            <FeatureCard img={all.find(p=>p.slug==="nb-1906a-silver")?.image} title={t("home.feat4")} desc={t("home.feat4d")} small />
+            <FeatureCard img={all.find(p=>p.slug==="converse-chuck70-hi-natural")?.image} title={t("home.feat5")} desc={t("home.feat5d")} small />
+          </div>
+        </section>
 
-      {/* ===================== PROMO BANNER ===================== */}
-      <section className="py-16 lg:py-24">
-        <div className="container">
-          <Reveal blur>
-            <div className="relative overflow-hidden rounded-[2rem] bg-accent text-white grid grid-cols-1 lg:grid-cols-2 items-center min-h-[280px]">
-              <div className="absolute -right-20 -bottom-20 w-72 h-72 rounded-full bg-white/15 blur-2xl"/>
-              <div className="relative z-10 p-8 sm:p-12">
-                <span className="eyebrow text-white/80">{promo.kicker}</span>
-                <h2 className="hd-2 mt-3 text-white">{promo.title}</h2>
-                <p className="text-white/85 mt-3 max-w-[360px]">{promo.desc}</p>
-                <Link href={promo.href} className="btn btn-light mt-6">
-                  {promo.cta}
-                  <span className="arrow-cap"><ArrowUpRight width={14} height={14}/></span>
+        {/* ===== CHOOSE YOUR VIBE (coverflow) ===== */}
+        <section className="mt-16 sm:mt-24">
+          <div className={wrap}><h2 className="hd-2 text-center">{t("home.vibe")}</h2></div>
+          <div className="mt-2">
+            <CoverflowCarousel
+              slides={vibe.map(p => ({ src: p.image ?? "", alt: p.name, title: p.name, subtitle: money(p.price) }))}
+              showCaption
+              showNavigation
+              showPagination
+              cardWidth="clamp(180px, 26vw, 300px)"
+              label={t("home.vibe")}
+            />
+          </div>
+        </section>
+
+        {/* ===== COLLECTION / NEW ARRIVALS ===== */}
+        <section className={`${wrap} mt-14 sm:mt-20`}>
+          <div className="text-[11px] uppercase tracking-[.22em] font-semibold text-accent">{t("home.collection")}</div>
+          <SectionHead title={t("home.newArrivals")} href="/shop?filter=new" cta={t("home.exploreMore")} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 mt-6">
+            {newArrivals[0] && <FeaturedCard product={newArrivals[0]} t={t} drop />}
+            <div className="grid grid-cols-2 gap-4 sm:gap-5">
+              {newArrivals.slice(1, 5).map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== FRESH FITS ===== */}
+        <FreshRow wrap={wrap} title={t("home.freshHi")} cta={t("home.exploreMore")} items={hiTops} />
+        <FreshRow wrap={wrap} title={t("home.freshLow")} cta={t("home.exploreMore")} items={lowTops} />
+
+        {/* ===== COMMUNITY (3D testimonials) ===== */}
+        <section className="mt-16 sm:mt-24">
+          <div className={wrap}><h2 className="hd-2 text-center">{t("home.community")}</h2></div>
+          <div className="mt-4"><Testimonials3D /></div>
+        </section>
+
+        {/* ===== LIMITED DROP ===== */}
+        {limited && (
+        <section className={`${wrap} mt-16 sm:mt-24`}>
+          <div className="relative overflow-hidden rounded-[2rem] card-dark text-white p-6 sm:p-10 lg:p-12">
+            <div className="absolute -left-24 -bottom-24 w-80 h-80 rounded-full bg-accent/25 blur-3xl" />
+            <div className="absolute right-8 top-8 hidden sm:block font-display text-[13px] uppercase tracking-[.3em] text-white/25">X · MAS</div>
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-10 items-center">
+              <div>
+                <span className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[.24em] font-semibold text-accent">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />{t("home.limitedKicker")}
+                </span>
+                <h2 className="hd-1 mt-3">{limited.name}</h2>
+                <p className="text-white/65 mt-3 max-w-[400px]">{t("home.limitedDesc")}</p>
+                <div className="mt-7"><Countdown /></div>
+                <Link href={`/product/${limited.slug}`} className="btn btn-primary mt-8">
+                  {t("home.grabNow")} <span className="arrow-cap bg-white/25 text-white"><ArrowUpRight width={14} height={14}/></span>
                 </Link>
               </div>
-              <div className="relative h-[220px] lg:h-full min-h-[240px]">
-                <Photo src={promo.img} alt={promo.title}
-                  fallback={<div className="absolute inset-0"/>}
-                  imgClassName="absolute inset-0 w-full h-full object-cover"/>
-                <div className="absolute inset-0 bg-gradient-to-r from-accent via-accent/40 to-transparent lg:from-accent/80"/>
+              <div className="relative rounded-[1.5rem] bg-white/[.05] border border-white/10 overflow-hidden aspect-[4/3]">
+                <Photo src={limited.image} alt={limited.name} imgClassName="object-contain p-3" />
               </div>
             </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ===================== NEW ARRIVALS ===================== */}
-      <section className="pb-16 lg:pb-24">
-        <div className="container">
-          <Reveal>
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <span className="eyebrow">{t("home.justDropped")}</span>
-                <h2 className="font-display text-[28px] sm:text-[36px] tracking-tight mt-2">{t("home.newArrivals")}</h2>
-              </div>
-              <Link href="/shop?filter=new" className="btn btn-outline btn-sm hidden sm:inline-flex">{t("common.viewAll")} <ArrowRight width={14} height={14}/></Link>
-            </div>
-          </Reveal>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {products.slice(4, 12).map((p, i) => <ProductCard key={p.id} product={p} index={i}/>)}
           </div>
-          <div className="flex justify-center mt-10">
-            <Link href="/shop" className="btn btn-dark">
-              {t("home.browseAll")}
-              <span className="arrow-cap !bg-white !text-ink"><ArrowUpRight width={14} height={14}/></span>
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+        )}
 
-      {/* ===================== NEWSLETTER ===================== */}
-      <section className="pb-16 lg:pb-24">
-        <div className="container">
-          <Reveal blur
-            className="relative overflow-hidden text-ink rounded-[1.75rem] sm:rounded-[2.25rem] p-8 sm:p-14 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center border border-line bg-white shadow-[0_24px_60px_-40px_rgba(232,85,10,.35)]">
-            {/* faint warm corner bloom — matches the footer */}
-            <div className="pointer-events-none absolute -top-24 right-[8%] h-56 w-56 rounded-full bg-accent/10 blur-3xl"/>
-            <div className="relative z-10">
-              <span className="eyebrow text-accent">{t("home.newsKicker")}</span>
-              <h2 className="font-display text-[32px] sm:text-[44px] tracking-tight mt-3 leading-[.95] text-ink">
-                {t("home.newsTitle")}
-              </h2>
-              <p className="text-muted mt-4 max-w-[400px]">{t("home.newsDesc")}</p>
-            </div>
-            <NewsletterForm />
-          </Reveal>
-        </div>
-      </section>
+        {/* ===== NEWSLETTER ===== */}
+        <section className={`${wrap} mt-16 sm:mt-24 mb-6`}>
+          <div className="relative overflow-hidden rounded-[2rem] bg-accent-soft border border-accent/20 p-8 sm:p-12 text-center">
+            <span className="text-[11px] uppercase tracking-[.24em] font-semibold text-accent-deep">{t("home.newsKicker")}</span>
+            <h2 className="hd-2 mt-2 text-ink">{t("home.newsTitle")}</h2>
+            <p className="text-ink/65 mt-2 max-w-[440px] mx-auto">{t("home.newsDesc")}</p>
+            <div className="mt-6 max-w-[440px] mx-auto"><NewsletterForm /></div>
+          </div>
+        </section>
+      </div>
 
       <Footer />
     </>
+  );
+}
+
+/* ---------- helpers ---------- */
+
+function SectionHead({ title, href, cta }: { title: string; href: string; cta: string }) {
+  return (
+    <div className="flex items-end justify-between gap-4">
+      <h2 className="hd-2">{title}</h2>
+      <Link href={href} className="chip shrink-0">{cta} <ArrowRight width={13} height={13}/></Link>
+    </div>
+  );
+}
+
+function FeaturedCard({ product, t, drop }: { product: Product; t: (k:string)=>string; drop?: boolean }) {
+  return (
+    <Link href={`/product/${product.slug}`} className="group relative flex flex-col justify-between overflow-hidden rounded-[1.6rem] bg-white border border-line p-6 min-h-[360px] transition-shadow hover:shadow-deep">
+      <div className="relative z-10">
+        {product.badge && <span className={`text-[10px] uppercase tracking-[.14em] font-semibold px-2.5 h-6 rounded-pill inline-grid place-items-center ${product.badge==="New"?"bg-accent text-white":"bg-ink text-white"}`}>{product.badge}</span>}
+        <h3 className="font-display text-[26px] sm:text-[30px] uppercase leading-none mt-3 group-hover:text-accent-deep transition-colors">{product.name}</h3>
+        <div className="font-display text-[20px] text-accent-deep mt-1 num-tabular">{money(product.price)}</div>
+        {drop && <div className="mt-4"><span className="font-display text-[22px] text-accent uppercase leading-none">{t("home.justDropped")}</span></div>}
+      </div>
+      <div className="pointer-events-none absolute right-0 bottom-0 w-[78%] h-[72%]">
+        <Photo src={product.image} alt={product.name} imgClassName="absolute inset-0 w-full h-full object-contain object-right-bottom drop-shadow-[0_24px_30px_rgba(22,21,21,.25)] transition-transform duration-500 group-hover:scale-105" />
+      </div>
+      <span className="relative z-10 self-start mt-4 w-11 h-11 rounded-full bg-accent text-white grid place-items-center group-hover:bg-accent-deep transition-colors shadow-[0_10px_24px_-8px_rgba(241,89,43,.7)]">
+        <ArrowUpRight width={16} height={16} />
+      </span>
+    </Link>
+  );
+}
+
+function FeatureCard({ img, title, desc, small }: { img?: string; title: string; desc: string; small?: boolean }) {
+  return (
+    <div className={`relative overflow-hidden rounded-[1.4rem] ${small ? "min-h-[180px]" : "min-h-[220px]"} bg-graphite`}>
+      {img && <Photo src={img} alt={title} imgClassName="absolute inset-0 w-full h-full object-cover" />}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+      <div className="absolute left-5 bottom-5 right-5 text-white">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+          <h3 className="font-display uppercase tracking-[.03em] text-[16px]">{title}</h3>
+        </div>
+        <p className="text-white/70 text-[12.5px] mt-1 leading-snug">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
+function FreshRow({ wrap, title, cta, items }: { wrap: string; title: string; cta: string; items: Product[] }) {
+  if (!items.length) return null;
+  return (
+    <section className={`${wrap} mt-14 sm:mt-20`}>
+      <SectionHead title={title} href="/shop" cta={cta} />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-6">
+        {items.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+      </div>
+    </section>
   );
 }

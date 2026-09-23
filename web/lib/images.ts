@@ -1,27 +1,20 @@
-// Beauty product photography. Files live in web/public/products/*.avif and are
-// referenced by relative path (resolved against the storefront's own origin).
-// In production these move to Cloudflare R2 (F5). Swap any value for your own.
+// X-MAS product photography. Files live in web/public/products/<handle>.jpg
+// (real store shots). Medusa also carries each product's thumbnail; these
+// constants power the homepage hero / editorial sections.
 
-const P = (n: number) => `/products/p${n}.avif`;
+export const productImg = (handleOrId: string) => `/products/${handleOrId}.jpg`;
 
-// 6 real product photos, cycled across the 12 slots the UI expects.
+// Hero + editorial feature imagery (pick strong colourways).
+export const HERO_IMG  = productImg("converse-chuck70-hi-navy");
+export const GROUP_IMG = productImg("nb-1906a-silver");
+export const FILM_IMG  = productImg("converse-one-star-mustard");
+
+// A few named slots kept for backwards-compat with older sections.
 export const PRODUCT_IMG: Record<string, string> = {
-  p1:  P(1), // eau de parfum (amber)
-  p2:  P(2), // eau de parfum (signature)
-  p3:  P(3), // cream / lotion (cream)
-  p4:  P(4), // serum (amber glass)
-  p5:  P(5), // gift set
-  p6:  P(6), // lip / makeup (pink)
-  p7:  P(1),
-  p8:  P(4),
-  p9:  P(5),
-  p10: P(6),
-  p11: P(3),
-  p12: P(2),
+  p1: productImg("converse-chuck70-hi-navy"),
+  p2: productImg("converse-one-star-mustard"),
+  p3: productImg("nb-1906a-silver"),
+  p4: productImg("converse-chuck-platform-pink"),
+  p5: productImg("converse-suede-low-red"),
+  p6: productImg("converse-retro-trainer-green"),
 };
-
-export const HERO_IMG  = P(1); // fragrance hero
-export const GROUP_IMG = P(5); // gift set
-export const FILM_IMG  = P(4); // serum still
-
-export const productImg = (id: string) => PRODUCT_IMG[id];
