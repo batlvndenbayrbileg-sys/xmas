@@ -41,7 +41,7 @@ function printPickPack(orders: QOrder[]) {
   const packing = orders.map((o) => `
     <div class="slip">
       <div class="slip-h">
-        <div><b>NARAN</b> — Захиалга #${o.display_id ?? ""}</div>
+        <div><b>X-MAS</b> — Захиалга #${o.display_id ?? ""}</div>
         <div>${esc(new Date(o.created_at).toLocaleDateString("mn-MN"))}</div>
       </div>
       <div class="addr">

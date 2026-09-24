@@ -78,7 +78,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     salesChannelId = channels[0]?.id;
   } catch { /* optional */ }
 
-  const email = String(body?.email || "").trim() || "offline@naran.mn";
+  const email = String(body?.email || "").trim() || "offline@xmas.mn";
 
   try {
     const { result } = await createOrderWorkflow(req.scope).run({

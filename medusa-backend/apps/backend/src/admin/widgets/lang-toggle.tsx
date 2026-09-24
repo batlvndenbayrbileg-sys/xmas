@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { mnOverrides } from "../lib/mn";
 
-const STORAGE_KEY = "naran_admin_lang";
+const STORAGE_KEY = "xmas_admin_lang";
 
 // Flips the whole admin between Монгол and English. Medusa's dashboard already
 // ships a complete `mn` locale, so switching languages translates the entire UI
-// out of the box; on top of that we deep-merge a few NARAN branding overrides
+// out of the box; on top of that we deep-merge a few X-MAS branding overrides
 // (e.g. the login greeting). The choice is remembered in localStorage and
 // re-applied on every mount, so the language sticks across navigation/reloads.
 const applyOverrides = (i18n: any) => {

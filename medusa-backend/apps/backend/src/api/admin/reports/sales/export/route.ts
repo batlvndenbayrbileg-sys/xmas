@@ -34,6 +34,6 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
   const csv = "﻿" + [header.join(","), ...rows.map((row) => row.map(cell).join(","))].join("\n");
   res.setHeader("Content-Type", "text/csv; charset=utf-8");
-  res.setHeader("Content-Disposition", `attachment; filename="naran-sales-${type}.csv"`);
+  res.setHeader("Content-Disposition", `attachment; filename="xmas-sales-${type}.csv"`);
   res.send(csv);
 }

@@ -2,8 +2,8 @@ import { defineWidgetConfig } from "@medusajs/admin-sdk";
 import { useEffect } from "react";
 
 /**
- * NARAN brand theme for the Medusa admin. Medusa's built-in accent is blue
- * (--fg/bg/border-interactive = rgba(59,130,246)); this recolors it to NARAN's
+ * X-MAS brand theme for the Medusa admin. Medusa's built-in accent is blue
+ * (--fg/bg/border-interactive = rgba(59,130,246)); this recolors it to X-MAS's
  * warm accent so links, focus rings, active nav items and selected states match
  * the storefront brand. Injected as a single <style> in <head> (persists across
  * client-side navigation), and mounted on the same broad zones as the language
@@ -20,13 +20,13 @@ const BRAND_CSS = `
   --border-interactive: rgba(232, 85, 10, 1) !important;
 }
 /* Login page: hide Medusa's default logo + "Welcome to Medusa" heading/subtitle
-   (the first two children of the max-w-[280px] login column) so the NARAN sign-in
+   (the first two children of the max-w-[280px] login column) so the X-MAS sign-in
    header renders as the hero. Best-effort — a no-op if Medusa changes the markup. */
 [class*="min-h-dvh"] [class*="max-w-[280px]"] > :first-child,
 [class*="min-h-dvh"] [class*="max-w-[280px]"] > :nth-child(2) {
   display: none !important;
 }
-/* Active sidebar nav item → NARAN orange accent. React Router's NavLink sets
+/* Active sidebar nav item → X-MAS orange accent. React Router's NavLink sets
    aria-current="page" on the active link, so this reliably tints the active
    route's label + icon warm and adds a soft orange rail, without depending on
    Medusa's (minified) active class names. Best-effort: no-op if absent. */
@@ -38,7 +38,7 @@ nav a[aria-current="page"] {
 nav a[aria-current="page"] svg {
   color: var(--fg-interactive) !important;
 }
-/* Sidebar store badge → NARAN sun mark. Targets the store-header button's first
+/* Sidebar store badge → X-MAS sun mark. Targets the store-header button's first
    (24px avatar) cell via its distinctive arbitrary grid template. Best-effort:
    if Medusa changes this structure the rule simply no-ops. A white sun sits over
    the warm gradient; the gradient alone still brands the badge if the SVG fails. */
@@ -56,7 +56,7 @@ nav a[aria-current="page"] svg {
 
 const BrandTheme = () => {
   useEffect(() => {
-    const ID = "naran-brand-theme";
+    const ID = "xmas-brand-theme";
     if (typeof document === "undefined" || document.getElementById(ID)) return;
     const style = document.createElement("style");
     style.id = ID;

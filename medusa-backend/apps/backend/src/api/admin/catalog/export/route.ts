@@ -5,6 +5,6 @@ import { exportProductsCsv } from "../../../../lib/catalog";
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const csv = await exportProductsCsv(req.scope);
   res.setHeader("Content-Type", "text/csv; charset=utf-8");
-  res.setHeader("Content-Disposition", 'attachment; filename="naran-catalog.csv"');
+  res.setHeader("Content-Disposition", 'attachment; filename="xmas-catalog.csv"');
   res.send(csv);
 }

@@ -120,7 +120,7 @@ const CatalogPage = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "naran-catalog.csv";
+      a.download = "xmas-catalog.csv";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -189,7 +189,7 @@ const CatalogPage = () => {
           onChange={e => onFile(e.target.files?.[0])}
         />
         <Textarea
-          placeholder={"handle,title,price,category,sizes,image,description\nlipstick-1,NARAN Lip 1,45000,makeup,Nude,,Тайлбар"}
+          placeholder={"handle,title,price,category,sizes,image,description\nchuck-70-hi,Converse Chuck 70 Hi,349000,converse,42,,Тайлбар"}
           value={csv}
           onChange={e => setCsv(e.target.value)}
           rows={6}

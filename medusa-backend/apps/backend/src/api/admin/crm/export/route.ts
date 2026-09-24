@@ -41,6 +41,6 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const csv = "﻿" + lines.join("\n"); // BOM so Excel reads UTF-8 (Cyrillic)
 
   res.setHeader("Content-Type", "text/csv; charset=utf-8");
-  res.setHeader("Content-Disposition", 'attachment; filename="naran-customers.csv"');
+  res.setHeader("Content-Disposition", 'attachment; filename="xmas-customers.csv"');
   res.send(csv);
 }

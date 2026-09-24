@@ -1,7 +1,7 @@
 // Transactional email from the Medusa backend via Resend's REST API (no extra
 // dep). No RESEND_API_KEY → mock (logs), so fulfillment never breaks in dev.
 const KEY = process.env.RESEND_API_KEY;
-const FROM = process.env.EMAIL_FROM || "NARAN <onboarding@resend.dev>";
+const FROM = process.env.EMAIL_FROM || "X-MAS <onboarding@resend.dev>";
 
 export type ShippedEmail = {
   id: string;
@@ -17,7 +17,7 @@ export function renderShippedEmail(o: ShippedEmail): string {
   <div style="font-family:Arial,Helvetica,sans-serif;background:#F4F2FB;padding:32px">
     <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #ECE9F7">
       <div style="background:linear-gradient(120deg,#6E54EC,#A95EEA);padding:26px 28px">
-        <span style="color:#fff;font-size:22px;font-weight:800;letter-spacing:2px">NARAN</span>
+        <span style="color:#fff;font-size:22px;font-weight:800;letter-spacing:2px">X-MAS</span>
       </div>
       <div style="padding:28px">
         <h1 style="margin:0 0 6px;font-size:22px;color:#1B1533">Захиалга хүргэлтэд гарлаа 🚚</h1>
@@ -25,7 +25,7 @@ export function renderShippedEmail(o: ShippedEmail): string {
           Таны <b>${o.id}</b> захиалга замдаа гарлаа. Удахгүй хүлээж авах болно.
         </p>
         <table style="width:100%;border-collapse:collapse;background:#F7F5FD;border-radius:12px;padding:4px 14px">${rows}</table>
-        <p style="margin:24px 0 0;color:#8B85A0;font-size:12px">NARAN · Гоо сайхан, нэг дороос · Улаанбаатар, Монгол</p>
+        <p style="margin:24px 0 0;color:#8B85A0;font-size:12px">X-MAS · Оригинал пүүз, нэг дороос · Улаанбаатар, Монгол</p>
       </div>
     </div>
   </div>`;
@@ -41,7 +41,7 @@ export async function sendShippedEmail(o: ShippedEmail): Promise<void> {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { authorization: `Bearer ${KEY}`, "content-type": "application/json" },
-      body: JSON.stringify({ from: FROM, to: o.email, subject: `NARAN захиалга ${o.id} хүргэлтэд гарлаа`, html }),
+      body: JSON.stringify({ from: FROM, to: o.email, subject: `X-MAS захиалга ${o.id} хүргэлтэд гарлаа`, html }),
     });
     if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
     console.log(`[email] shipped ${o.id} → ${o.email}`);
@@ -57,7 +57,7 @@ export function renderPasswordResetEmail(o: PasswordResetEmail): string {
   <div style="font-family:Arial,Helvetica,sans-serif;background:#FDF3EC;padding:32px">
     <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #F3E2D5">
       <div style="background:linear-gradient(120deg,#FF7A2E,#E8550A);padding:26px 28px">
-        <span style="color:#fff;font-size:22px;font-weight:800;letter-spacing:2px">NARAN</span>
+        <span style="color:#fff;font-size:22px;font-weight:800;letter-spacing:2px">X-MAS</span>
       </div>
       <div style="padding:28px">
         <h1 style="margin:0 0 6px;font-size:22px;color:#0E0F10">Нууц үг сэргээх</h1>
@@ -75,7 +75,7 @@ export function renderPasswordResetEmail(o: PasswordResetEmail): string {
         <p style="margin:20px 0 0;color:#8A8F93;font-size:12px">
           Хэрэв та энэ хүсэлтийг илгээгээгүй бол энэ имэйлийг үл тоомсорлоно уу.
         </p>
-        <p style="margin:22px 0 0;color:#8A8F93;font-size:12px">NARAN · Гоо сайхан, нэг дороос · Улаанбаатар, Монгол</p>
+        <p style="margin:22px 0 0;color:#8A8F93;font-size:12px">X-MAS · Оригинал пүүз, нэг дороос · Улаанбаатар, Монгол</p>
       </div>
     </div>
   </div>`;
@@ -92,7 +92,7 @@ export async function sendPasswordResetEmail(o: PasswordResetEmail): Promise<voi
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { authorization: `Bearer ${KEY}`, "content-type": "application/json" },
-      body: JSON.stringify({ from: FROM, to: o.email, subject: "NARAN — нууц үг сэргээх", html }),
+      body: JSON.stringify({ from: FROM, to: o.email, subject: "X-MAS — нууц үг сэргээх", html }),
     });
     if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
     console.log(`[email] password reset → ${o.email}`);
